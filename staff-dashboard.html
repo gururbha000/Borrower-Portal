@@ -1479,7 +1479,8 @@ html[data-v96-route="transaction"] #integratedRequestView,
 html[data-v96-route="reserve"] #integratedRequestView {display:block!important}
 html[data-v96-route="staff"] #borrowerView {display:none!important}
 html[data-v96-route="staff"] #staffView {display:block!important}
-html[data-v96-route="staff"] #staffWrap .staffQueue {display:block!important}
+html[data-v96-route="staff"] #staffWrap.queueMode .staffQueue {display:block!important}
+html[data-v96-route="staff"] #staffWrap:not(.queueMode) .staffQueue {display:none!important}
 html[data-v96-route="transaction"] #staffView,
 html[data-v96-route="reserve"] #staffView {display:none!important}
 html[data-v96-route="transaction"] #borrowerView,
@@ -3930,4 +3931,71 @@ if(route==='staff'){
  if(input){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));}
 }
 })();
-</script></body></html>
+</script><style id="v97-review-route-fix">
+html[data-v96-route="staff"] #staffWrap.queueMode > .requestOnlyChrome,
+html[data-v96-route="staff"] #staffWrap.queueMode > .staffGrid,
+html[data-v96-route="staff"] #staffWrap.queueMode > .staffActivityLogWorkspace {display:none!important}
+html[data-v96-route="staff"] #staffWrap:not(.queueMode) > .staffQueue {display:none!important}
+</style>
+<script id="v97-review-navigation">
+(function(){
+function init(){
+const wrap=document.getElementById('staffWrap');
+const staff=document.getElementById('staffView');
+const queue=document.getElementById('staffQueue');
+if(!wrap||!staff||!queue)return;
+function showReview(btn){
+ const row=btn.closest('tr');if(!row)return;
+ const cells=row.cells;
+ const banner=wrap.querySelector('.staffBanner');
+ if(banner){const values=banner.querySelectorAll('strong');
+ if(values[0])values[0].textContent=btn.textContent.trim();
+ if(values[1])values[1].textContent='Reserve Withdrawal';
+ if(values[2])values[2].textContent=cells[2]?.textContent.trim()||'';
+ if(values[3])values[3].textContent=cells[3]?.textContent.trim()||'';}
+ staff.classList.remove('queue-mode');wrap.classList.remove('queueMode');
+ const docs=document.getElementById('staffDocumentReviewWorkspace');if(docs)docs.style.display='none';
+ const activity=document.getElementById('staffActivityLogWorkspace');if(activity)activity.style.display='none';
+ staff.querySelectorAll('.staffGrid').forEach(el=>el.style.display='');
+ window.scrollTo(0,0);
+}
+function showQueue(){wrap.classList.add('queueMode');staff.classList.add('queue-mode');window.scrollTo(0,0);}
+queue.querySelectorAll('#reserveQueue .queueLink').forEach(btn=>btn.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation();showReview(btn)},true));
+wrap.querySelectorAll('.staffBanner strong').forEach(btn=>{if(btn.textContent.includes('Back'))btn.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation();showQueue()},true)});
+window.v97ShowStaffQueue=showQueue;
+showQueue();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+<style id="v97-clickable-reserve-fix">
+html[data-v96-route="staff"] #staffView:not(.queue-mode) #staffWrap:not(.queueMode) > .staffGrid{display:grid!important}
+html[data-v96-route="staff"] #staffView:not(.queue-mode) #staffWrap:not(.queueMode) > .requestOnlyChrome{display:block!important}
+html[data-v96-route="staff"] #staffWrap:not(.queueMode) #staffQueue{display:none!important}
+#reserveQueue .queueLink{cursor:pointer;text-decoration:underline;color:#155aa3}
+</style>
+<script id="v97-clickable-reserve-fix">
+(function(){
+ function bind(){
+  const wrap=document.getElementById('staffWrap'),staff=document.getElementById('staffView');
+  if(!wrap||!staff)return;
+  document.querySelectorAll('#reserveQueue .queueLink').forEach(function(button){
+   button.onclick=function(event){
+    event.preventDefault();event.stopPropagation();
+    const row=button.closest('tr'),cells=row?.cells,banner=wrap.querySelector('.staffBanner');
+    if(banner){const labels=banner.querySelectorAll('strong');
+     if(labels[0])labels[0].textContent=button.textContent.trim();
+     if(labels[1])labels[1].textContent='Reserve Withdrawal';
+     if(labels[2])labels[2].textContent=cells?.[1]?.textContent.trim()||'';
+     if(labels[3])labels[3].textContent=cells?.[2]?.textContent.trim()||'';
+    }
+    staff.classList.remove('queue-mode');wrap.classList.remove('queueMode');
+    wrap.querySelectorAll(':scope > .staffGrid').forEach(el=>el.style.removeProperty('display'));
+    window.scrollTo(0,0);
+   };
+  });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
+</body></html>
