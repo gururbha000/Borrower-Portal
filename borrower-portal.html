@@ -1472,7 +1472,8 @@ td input,td select{width:100%;height:34px;border:1px solid #aeb9c8;border-radius
 <style id="v96-route-css">
 /* v104: onboarding visibility follows .active after authorization/profile completion */
 /* v104: portal visibility follows .hidden-for-onboard */
-html[data-v96-route="borrower"] #integratedRequestView {display:none!important}
+html[data-v96-route="borrower"] #integratedRequestView:not(.request-open) {display:none!important}
+html[data-v96-route="borrower"] #integratedRequestView.request-open {display:block!important}
 /* v104: do not override the onboarding hide class */
 html[data-v96-route="staff"] #integratedRequestView,
 html[data-v96-route="transaction"] #integratedRequestView,
@@ -1824,13 +1825,10 @@ document.querySelectorAll('.req-link').forEach(function(btn){
  }
  function openAddRequest(){
    const req=document.getElementById('integratedRequestView');
-   if(!req) return;
-   [...document.body.children].forEach(el=>{
-     if(el!==req && el.tagName!=='SCRIPT' && el.tagName!=='STYLE'){
-       el.dataset.requestOldDisplay=el.style.display||'';
-       el.style.display='none';
-     }
-   });
+   const shell=document.getElementById('portalShell');
+   if(!req)return;
+   if(shell)shell.style.display='none';
+   req.classList.add('request-open');
    req.style.display='block';
    window.scrollTo(0,0);
  }
@@ -3700,7 +3698,7 @@ function goToRelatedRequests(){
   const shell=document.getElementById('portalShell');
 
   function returnToV32Dashboard(){
-    if(req) req.style.display='none';
+    if(req){req.classList.remove('request-open');req.style.display='none';}
     if(shell) shell.style.display='';
     window.scrollTo(0,0);
   }
@@ -3711,6 +3709,7 @@ function goToRelatedRequests(){
     const add=e.target.closest('#universalAddRequest, #basicAddRequest, [data-open-integrated-request]');
     if(add && req){
       if(shell) shell.style.display='none';
+      req.classList.add('request-open');
       req.style.display='block';
       window.scrollTo(0,0);
     }
@@ -3851,6 +3850,13 @@ function goToRelatedRequests(){
   }
   add?.addEventListener("click",addManualRow);
   document.querySelectorAll('input[name="requestCategory"]').forEach(r=>r.addEventListener("change",render));
+
+  // Loan-level Add Request buttons open the same request workflow as the toolbar.
+  document.querySelectorAll('#dashboard .loan-card-requests-head .btn, #dashboard .old-global-requests .section-head .btn').forEach(button=>{
+    button.addEventListener('click',function(){
+      document.getElementById('universalAddRequest')?.click();
+    });
+  });
 
   // Primary / Affiliated universal Add Request: detect the active dashboard role.
   document.getElementById("universalAddRequest")?.addEventListener("click",()=>setTimeout(()=>openFor(detectRole()),0));
