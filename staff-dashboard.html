@@ -4026,4 +4026,23 @@ function unlinkLoanByNumber(n){
 function unlinkAssociatedLoan(){const checked=[...document.querySelectorAll('.loanAssocCheck:checked')];if(checked.length){checked[0].checked=false;if(typeof saveLoanAssociation==='function')saveLoanAssociation()}else{const e=document.getElementById('associatedLoans');if(e)e.textContent='No associated loans';}}
 function toggleAllStaffDocs(c){document.querySelectorAll('.staffDocCheck').forEach(x=>x.checked=c.checked)}
 function formatExternalComment(cmd,val){const e=document.getElementById('externalCommentEditor');e.focus();document.execCommand(cmd,false,val||null);document.getElementById('externalComment').value=e.innerHTML}
-</script></body></html>
+</script>
+<style id="v100-exclusive-staff-tabs">
+/* The older route-level grid !important rule must not override selected tabs. */
+html[data-v96-route="staff"] #staffView.review-doc-mode #staffWrap:not(.queueMode) > .staffGrid,
+html[data-v96-route="staff"] #staffView.staff-activity-mode #staffWrap:not(.queueMode) > .staffGrid {display:none !important;}
+html[data-v96-route="staff"] #staffView.staff-activity-mode #staffDocumentReviewWorkspace {display:none !important;}
+html[data-v96-route="staff"] #staffView.staff-activity-mode #staffActivityLogWorkspace {display:block !important;}
+html[data-v96-route="staff"] #staffView.review-doc-mode #staffActivityLogWorkspace {display:none !important;}
+html[data-v96-route="staff"] #staffView:not(.review-doc-mode):not(.staff-activity-mode) #staffDocumentReviewWorkspace,
+html[data-v96-route="staff"] #staffView:not(.review-doc-mode):not(.staff-activity-mode) #staffActivityLogWorkspace {display:none !important;}
+</style>
+<script id="v100-exclusive-staff-tabs-js">
+(function(){
+ const originalDocs=window.openStaffDocReview, originalDetails=window.closeStaffDocReview, originalActivity=window.showStaffActivityLog;
+ window.openStaffDocReview=function(){document.getElementById('staffView')?.classList.remove('staff-activity-mode');return originalDocs?.apply(this,arguments);};
+ window.closeStaffDocReview=function(){document.getElementById('staffView')?.classList.remove('staff-activity-mode');return originalDetails?.apply(this,arguments);};
+ window.showStaffActivityLog=function(){document.getElementById('staffView')?.classList.add('staff-activity-mode');return originalActivity?.apply(this,arguments);};
+})();
+</script>
+</body></html>
