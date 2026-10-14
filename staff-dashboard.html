@@ -2475,15 +2475,15 @@ syncInvoiceTotal();
 <div class="staffDocWorkspace" id="staffDocumentReviewWorkspace" style="display:none;">
 <section class="staffSimpleDocs">
 <div class="staffSimpleDocsHead"><div><h2>Documents</h2><p>View requester-submitted documents and manage staff-added documents for this Reserve Withdrawal request.</p></div><div class="staffDocHeadActions"><button class="downloadAllDocsBtn" onclick="downloadAllStaffDocuments()" type="button">⇩ Download All</button><button class="addStaffDocBtn" onclick="openStaffDocModal()" type="button">＋ Add Document</button></div></div>
-<div class="docsReviewTableWrap"><table class="docsReviewTable staffManageDocsTable"><thead><tr><th>Document Name</th><th>Type</th><th>Related Invoice #</th><th>Uploaded by</th><th>Uploaded On</th><th>Source</th><th>Actions</th></tr></thead>
+<div class="docsReviewTableWrap"><table class="docsReviewTable staffManageDocsTable"><thead><tr><th><input type="checkbox" aria-label="Select all documents" onclick="toggleAllStaffDocs(this)"/></th><th>Document Name</th><th>Type</th><th>Related Invoice #</th><th>Uploaded by</th><th>Uploaded On</th><th>Source</th><th>Actions</th></tr></thead>
 <tbody id="staffManageDocsBody">
-<tr><td><a class="docLink" href="#">Signed Reserve Withdrawal Request Letter.pdf</a></td><td>Request Letter</td><td>—</td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
-<tr><td><a class="docLink" href="#">Reserve Bank Statement - Sep 2026.pdf</a></td><td>Reserve Balance Support</td><td>—</td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
-<tr><td><a class="docLink" href="#">ABC Roofing - EST-1048.pdf</a></td><td>Invoice / Estimate</td><td><b>EST-1048</b></td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
-<tr><td><a class="docLink" href="#">Westside Restoration - EST-2281.pdf</a></td><td>Invoice / Estimate</td><td><b>EST-2281</b></td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
-<tr><td><a class="docLink" href="#">Emergency Justification - Roof Leaks.pdf</a></td><td>Emergency Justification</td><td>—</td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
-<tr><td><a class="docLink" href="#">Roof Leak Supporting Photos.pdf</a></td><td>Supporting Documentation</td><td>—</td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
-<tr><td><a class="docLink" href="#">Reserve Withdrawal Invoice Detail.xlsx</a></td><td>Invoice Detail Spreadsheet</td><td>EST-1048; EST-2281</td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
+<tr><td><input type="checkbox" class="staffDocCheck" aria-label="Select document"/></td><td><a class="docLink" href="#">Signed Reserve Withdrawal Request Letter.pdf</a></td><td>Request Letter</td><td>—</td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
+<tr><td><input type="checkbox" class="staffDocCheck" aria-label="Select document"/></td><td><a class="docLink" href="#">Reserve Bank Statement - Sep 2026.pdf</a></td><td>Reserve Balance Support</td><td>—</td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
+<tr><td><input type="checkbox" class="staffDocCheck" aria-label="Select document"/></td><td><a class="docLink" href="#">ABC Roofing - EST-1048.pdf</a></td><td>Invoice / Estimate</td><td><b>EST-1048</b></td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
+<tr><td><input type="checkbox" class="staffDocCheck" aria-label="Select document"/></td><td><a class="docLink" href="#">Westside Restoration - EST-2281.pdf</a></td><td>Invoice / Estimate</td><td><b>EST-2281</b></td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
+<tr><td><input type="checkbox" class="staffDocCheck" aria-label="Select document"/></td><td><a class="docLink" href="#">Emergency Justification - Roof Leaks.pdf</a></td><td>Emergency Justification</td><td>—</td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
+<tr><td><input type="checkbox" class="staffDocCheck" aria-label="Select document"/></td><td><a class="docLink" href="#">Roof Leak Supporting Photos.pdf</a></td><td>Supporting Documentation</td><td>—</td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
+<tr><td><input type="checkbox" class="staffDocCheck" aria-label="Select document"/></td><td><a class="docLink" href="#">Reserve Withdrawal Invoice Detail.xlsx</a></td><td>Invoice Detail Spreadsheet</td><td>EST-1048; EST-2281</td><td>John Doe</td><td>09/25/2026</td><td><span class="sourcePill requester">Requester</span></td><td><button class="docActionBtn" onclick="editStaffDoc(this)">Edit Attributes</button></td></tr>
 </tbody></table></div>
 <p class="staffDocsAuditNote">Document additions and attribute changes are recorded in the Activity Log with staff name, date/time, and prior/new values.</p>
 </section></div>
@@ -2491,7 +2491,7 @@ syncInvoiceTotal();
 <div class="staffDocModalHead"><h3 id="staffDocModalTitle">Add Document</h3><button onclick="closeStaffDocModal()" type="button">×</button></div>
 <div class="staffDocForm"><label>Document / File<input id="staffDocName" placeholder="Enter or select document name" type="text"/></label><label>Document Type<select id="staffDocType"><option>Supporting Documentation</option><option>Request Letter</option><option>Reserve Balance Support</option><option>Invoice / Estimate</option><option>Emergency Justification</option><option>Invoice Detail Spreadsheet</option><option>Staff Correspondence</option><option>Other</option></select></label><label>Related Invoice #<input id="staffDocInvoice" placeholder="Optional" type="text"/></label><label>Description / Notes<input id="staffDocNotes" placeholder="Optional" type="text"/></label></div>
 <div class="staffDocModalActions"><button onclick="closeStaffDocModal()" type="button">Cancel</button><button class="primary" onclick="saveStaffDoc()" type="button">Save</button></div></div></div>
-<div class="staffGrid"><aside class="reviewNav"><h2>Review Steps</h2><button class="on" data-p="p1">✓ Request Information</button><button data-p="p2">✓ Project / Loan Info</button><button data-p="p3">✓ Reserve Withdrawal</button><button data-p="p4">✓ Invoice / Bid Info</button><button data-p="p5">✓ Submitted Documents</button><hr/><button>Messages 🔴 1</button></aside>
+<div class="staffGrid"><aside class="reviewNav"><h2>Review Steps</h2><button class="on" data-p="p1">✓ Request Information</button><button data-p="p2">✓ Project / Loan Info</button><button data-p="p3">✓ Reserve Withdrawal</button><button data-p="p4">✓ Invoice / Bid Info</button><button style="display:none!important" data-p="p5">✓ Submitted Documents</button><hr/><button>Messages 🔴 1</button></aside>
 <main class="reviewMain">
 <section class="reviewPanel on" id="p1"><div class="priorRequestNotice">
 <div aria-hidden="true" class="priorNoticeIcon">
@@ -2591,14 +2591,23 @@ syncInvoiceTotal();
 </div>
 </div>
 <div class="associationFooter">
-<div><strong>Loans Associated with this Request:</strong> <span id="associatedLoans">23-130489-001</span></div>
+<div><strong>Loans Associated with this Request:</strong> <span id="associatedLoans">23-130489-001</span> </div>
 <button class="saveAssociationBtn" onclick="saveLoanAssociation()" type="button">Save</button>
 </div>
 <div aria-live="polite" class="associationFeedback" id="associationFeedback"></div>
 <div class="associationAuditNote">Changes to the request-to-loan association are recorded in the Activity Log with staff name, date/time, prior association, and new association.</div>
 </div>
 </section>
-<section class="reviewPanel" id="p3"><h2>Step 3 - Reserve Withdrawal</h2><div class="detailCard"><div class="detailGrid three"><div><span>Reserve Fund:</span><strong>Replacement Reserve</strong></div><div><span>Withdrawal Amount:</span><strong>$78,500</strong></div><div><span>Fiscal Year:</span><strong>2026</strong></div><div><span>Current Reserve Balance:</span><strong>$214,630</strong></div><div><span>Balance As-Of:</span><strong>09/20/2026</strong></div><div><span>Need-By Date:</span><strong>10/15/2026</strong></div><div class="wide"><span>Description:</span><strong>Roof repairs and water-damage remediation affecting occupied units.</strong></div></div></div></section>
+<section class="reviewPanel" id="p3"><h2>Step 3 - Reserve Withdrawal</h2>
+<div class="detailCard"><div class="detailGrid three">
+<div><span>Reserve Fund:</span><select class="reserveStaffEdit" data-reserve-field="fund" disabled><option>Replacement Reserve</option><option>Operating Reserve</option></select></div>
+<div><span>Withdrawal Amount:</span><input class="reserveStaffEdit" value="$78,500" disabled/></div>
+<div><span>Fiscal Year:</span><input class="reserveStaffEdit" value="2026" disabled/></div>
+<div><span>Current Reserve Balance:<small class="reserveFieldHint">Borrower/requester-provided</small><a class="reserveBalanceLink" href="portfolio-management.html#reserve-balances" title="Open LAHD Portfolio Management reserve balances">View LAHD-maintained balance ↗</a></span><input class="reserveStaffEdit" value="$214,630" disabled/></div>
+<div><span>Balance As-Of:</span><input class="reserveStaffEdit" value="09/20/2026" disabled/></div>
+<div><span>Need-By Date:</span><input class="reserveStaffEdit" value="10/15/2026" disabled/></div>
+<div class="wide"><span>Description:</span><textarea class="reserveStaffEdit" rows="2" disabled>Roof repairs and water-damage remediation affecting occupied units.</textarea></div>
+</div></div><div class="staffEditFooter"><button class="saveAssociationBtn" id="reserveEditToggle" type="button" onclick="toggleStaffReserveEdit()">Edit Reserve Details</button><span id="reserveEditSaved" aria-live="polite"></span></div></section>
 <section class="reviewPanel" id="p4">
 <h2>Step 4 - Invoice / Bid Information</h2>
 <div class="invoiceReviewHead">
@@ -2676,7 +2685,7 @@ syncInvoiceTotal();
 </div>
 </div>
 </section>
-<section class="reviewPanel" id="p5">
+<section class="reviewPanel" id="p5" style="display:none!important">
 <h2>Step 5 - Documents Submitted (by Requestor)</h2>
 <div class="docsReviewTableWrap">
 <table class="docsReviewTable">
@@ -2942,7 +2951,7 @@ function restoreRemovedInvoice(btn){
 </style><script>
 let savedAssociations=['23-130489-001'];
 function selectedLoans(){return [...document.querySelectorAll('.loanAssocCheck:checked')].map(x=>x.dataset.loan);}
-function renderAssociatedLoans(){const e=document.getElementById('associatedLoans');if(e)e.innerHTML=savedAssociations.length?savedAssociations.map(x=>'<span class="associatedLoanChip">'+x+'</span>').join(' '):'<span class="noneAssociated">None</span>';}
+function renderAssociatedLoans(){const e=document.getElementById('associatedLoans');if(e)e.innerHTML=savedAssociations.length?savedAssociations.map(x=>'<span class="associatedLoanChip">'+x+' <button type="button" class="chipRemove" title="Unlink '+x+'" aria-label="Unlink '+x+'" onclick="unlinkLoanByNumber(\''+x+'\')">×</button></span>').join(' '):'<span class="noneAssociated">None</span>';}
 function refreshLoanAssociation(){
  document.querySelectorAll('.loanAssocCheck').forEach(c=>{const r=c.closest('.loanMatch');if(r)r.classList.toggle('selected',c.checked);});
  const s=document.getElementById('associationStatus');if(s){const ch=JSON.stringify(selectedLoans().sort())!==JSON.stringify([...savedAssociations].sort());s.textContent=ch?'Unsaved Changes':'Staff Validated';s.className='associationStatus '+(ch?'unsaved':'validated');}
@@ -3009,9 +3018,9 @@ function saveStaffDoc(){let n=staffDocName.value.trim()||'Staff Supporting Docum
 </div>
 <div class="approvalSummary" id="approveSummary" style="display:none">
 <div><small>Requested</small><strong>$78,500</strong></div>
-<div><small>Recommended</small><strong>$76,500</strong></div>
 <div><small>Available Reserve Balance</small><strong class="reserveBalanceValue">$70,000</strong></div>
-<div><small>Difference</small><strong class="differenceValue">-$2,000</strong></div>
+<div><small>Difference (Requested − Recommended)</small><strong class="differenceValue">$2,000</strong></div>
+<div><small>Recommended</small><strong>$76,500</strong></div>
 </div>
 <div class="reserveBalanceValidation" id="reserveBalanceValidation" style="display:none">
 <span class="reserveValidationIcon">!</span>
@@ -3019,7 +3028,7 @@ function saveStaffDoc(){let n=staffDocName.value.trim()||'Staff Supporting Docum
 <small>Review the available balance before submitting. If needed, create a related request to evaluate funding from another eligible reserve account.</small></div>
 </div>
 <div class="staffField"><label>Internal Comment</label><textarea id="internalComment" placeholder="Staff-only comment..."></textarea><div class="staffHelp">Visible to authorized LAHD staff only.</div></div>
-<div class="staffField" id="externalCommentField"><label id="externalCommentLabel">External Comment</label><textarea id="externalComment" placeholder="Comment visible to the submitter..."></textarea><div class="staffHelp">If entered, this comment is visible to the submitter in the Borrower Portal.</div></div>
+<div class="staffField" id="externalCommentField"><label id="externalCommentLabel">External Comment</label><div class="commentToolbar" id="commentToolbar"><button type="button" onclick="formatExternalComment('bold')"><b>B</b></button><button type="button" onclick="formatExternalComment('italic')"><i>I</i></button><button type="button" onclick="formatExternalComment('underline')"><u>U</u></button><button type="button" onclick="formatExternalComment('insertUnorderedList')">• List</button><button type="button" onclick="formatExternalComment('insertOrderedList')">1. List</button><button type="button" onclick="formatExternalComment('hiliteColor','#fff2a8')">Highlight</button><input type="color" aria-label="Text color" onchange="formatExternalComment('foreColor',this.value)"/></div><div id="externalCommentEditor" class="externalCommentEditor" contenteditable="true" role="textbox" aria-label="External Comment" data-placeholder="Comment visible to the submitter..."></div><textarea id="externalComment" style="display:none"></textarea><div class="staffHelp">If entered, this comment is visible to the submitter in the Borrower Portal.</div></div><div class="staffField" id="returnUploadField" style="display:none"><label>Attach Document (optional)</label><input type="file" id="returnAttachment" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg"/><div class="staffHelp">Attachments will accompany the return message (demo).</div></div>
 </div>
 <div class="staffModalFooter"><button class="staffBtn" onclick="closeStaffActionModal()" type="button">Cancel</button><button class="staffBtn reserveRelatedAction" id="reserveRelatedAction" onclick="closeStaffActionModal();openRelatedReserveModal()" style="display:none" type="button">Create Related Reserve Request</button><button class="staffBtn staffBtnPrimary" id="staffModalSubmit" onclick="submitStaffAction()" type="button">Assign</button></div>
 </div>
@@ -3041,7 +3050,8 @@ function openStaffActionModal(type){
  sum.style.display=type==='submitApproval'?'grid':'none';
  if(balanceAlert) balanceAlert.style.display=type==='submitApproval'?'flex':'none';
  const relatedAction=document.getElementById('reserveRelatedAction'); if(relatedAction) relatedAction.style.display=type==='submitApproval'?'inline-block':'none';
- if(extField) extField.style.display=type==='submitApproval'?'none':'block';
+ if(extField) extField.style.display=type==='return'?'block':'none';
+ const ru=document.getElementById('returnUploadField');if(ru)ru.style.display=type==='return'?'block':'none';
  extLabel.innerHTML=type==='return'?'External Comment <span class="requiredMark">*</span>':'External Comment';
  if(type==='assign'){title.textContent='Assign Request';submit.textContent='Assign';submit.className='staffBtn staffBtnPrimary';}
  if(type==='return'){title.textContent='Return to Submitter';submit.textContent='Return to Submitter';submit.className='staffBtn staffBtnReturn';}
@@ -3052,7 +3062,7 @@ function openStaffActionModal(type){
 function closeStaffActionModal(){document.getElementById('staffActionModal').classList.remove('open');}
 function submitStaffAction(){
  if(currentStaffAction==='assign' && !document.getElementById('assignStaffSelect').value){alert('Please select staff to assign.');return;}
- if(currentStaffAction==='return' && !document.getElementById('externalComment').value.trim()){alert('External Comment is required when returning a request to the submitter.');return;}
+ if(currentStaffAction==='return' && !document.getElementById('externalCommentEditor').innerText.trim()){alert('External Comment is required when returning a request to the submitter.');return;}
  closeStaffActionModal();
  if(currentStaffAction==='submitApproval'){
    var p=document.getElementById('approvalLetterPanel'); if(p)p.style.display='none';
@@ -3144,14 +3154,14 @@ document.addEventListener('DOMContentLoaded',function(){
 </div>
 <button aria-label="Close" class="relatedReserveClose" onclick="closeRelatedReserveModal()" type="button">×</button>
 </div>
-<div class="relatedReserveNotice">
+<div class="relatedReserveNotice" style="background:#fff0f0;border-left-color:#c22;color:#8f2020">
 <strong>Use when another reserve account is needed</strong>
 <span>The new request will be linked to this request. Project, loan, requester, and applicable supporting information will be copied to the new request for staff review.</span>
 </div>
 <div class="relatedReserveGrid">
 <div class="relatedReserveField">
 <label>Current Reserve Type</label>
-<div class="relatedReserveReadOnly">Operating Reserve</div>
+<div class="relatedReserveReadOnly">Replacement Reserve</div>
 </div>
 <div class="relatedReserveField">
 <label for="relatedTargetReserve">New Reserve Type <span>*</span></label>
@@ -4030,4 +4040,24 @@ html[data-v96-route="staff"] #staffView:not(.queue-mode) #staffWrap:not(.queueMo
  },true));
  }if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready()})();
 </script>
-</body></html>
+<style>
+.reserveStaffEdit{width:100%;min-width:115px;padding:8px 10px;border:1px solid #b9cbe0;border-radius:5px;font-weight:700;color:#193654;background:#fff}.detailGrid.three>div{min-width:0}.staffEditFooter{display:flex;align-items:center;gap:12px;justify-content:flex-end;margin-top:16px}.unlinkLoanBtn{margin-left:8px;background:#fff;border:1px solid #d95c5c;color:#a32121;border-radius:16px;padding:5px 10px;cursor:pointer}.commentToolbar{display:flex;gap:5px;flex-wrap:wrap;padding:6px;border:1px solid #c0d0e0;border-radius:5px 5px 0 0;background:#f6f9fc}.commentToolbar button{background:white;border:1px solid #cad6e5;border-radius:4px;padding:5px 9px;cursor:pointer}.commentToolbar input{width:34px;height:28px}.externalCommentEditor{min-height:110px;padding:12px;border:1px solid #b8cbe1;border-radius:0 0 5px 5px;background:#fff;outline:none}.externalCommentEditor:empty:before{content:attr(data-placeholder);color:#8896a8}.staffManageDocsTable td:first-child,.staffManageDocsTable th:first-child{width:45px;text-align:center}.staffDocCheck{width:17px;height:17px;cursor:pointer}
+.associatedLoanChip{display:inline-flex;align-items:center;gap:7px}.chipRemove{border:0;background:transparent;color:#a62c2c;cursor:pointer;font-size:17px;font-weight:700;padding:0 2px;line-height:1}.reserveFieldHint{display:block;font-size:11px;color:#65768a;margin-top:4px}.reserveBalanceLink{display:block;font-size:11px;margin-top:5px;color:#155c9f;text-decoration:underline}.detailGrid.three>div{align-items:center}.detailGrid.three>div>span{flex:0 0 auto}.reserveStaffEdit:disabled{background:#f7f9fc;color:#193654;opacity:1}.reserveStaffEdit{font-family:Arial,sans-serif}#p3 .detailGrid .wide textarea{flex:1;min-width:0}#p3 .detailGrid .wide{align-items:flex-start}
+</style><script>
+function toggleStaffReserveEdit(){
+ const fields=[...document.querySelectorAll('#p3 .reserveStaffEdit')],button=document.getElementById('reserveEditToggle');
+ const editing=fields[0].disabled;
+ fields.forEach(f=>f.disabled=!editing);
+ button.textContent=editing?'Save Reserve Details':'Edit Reserve Details';
+ document.getElementById('reserveEditSaved').textContent=editing?'Editing enabled':'Saved (demo)';
+}
+function unlinkLoanByNumber(n){
+ const c=[...document.querySelectorAll('.loanAssocCheck')].find(x=>x.dataset.loan===n);
+ if(c){c.checked=false;refreshLoanAssociation();}
+ savedAssociations=savedAssociations.filter(x=>x!==n);renderAssociatedLoans();
+ const f=document.getElementById('associationFeedback');if(f){f.className='associationFeedback show info';f.textContent='Loan '+n+' unlinked (demo). Select another AHIS loan and Save to confirm the association.';}
+}
+function unlinkAssociatedLoan(){const checked=[...document.querySelectorAll('.loanAssocCheck:checked')];if(checked.length){checked[0].checked=false;if(typeof saveLoanAssociation==='function')saveLoanAssociation()}else{const e=document.getElementById('associatedLoans');if(e)e.textContent='No associated loans';}}
+function toggleAllStaffDocs(c){document.querySelectorAll('.staffDocCheck').forEach(x=>x.checked=c.checked)}
+function formatExternalComment(cmd,val){const e=document.getElementById('externalCommentEditor');e.focus();document.execCommand(cmd,false,val||null);document.getElementById('externalComment').value=e.innerHTML}
+</script></body></html>
