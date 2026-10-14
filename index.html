@@ -1620,8 +1620,8 @@ Use the verification code provided by the borrower’s Primary User. If you do n
 <div class="notice red" id="notice"><div><b id="noticeTitle">⚠ Non Compliant</b><div id="noticeText">Arlington Square · Annual Financial Statements overdue</div></div><button class="btn secondary" id="noticeAction" style="display:none">View Request / Upload Documents</button></div>
 <div class="section"><div class="section-head"><h3>Requests</h3><button class="btn primary">+ Add Request</button></div>
 <table><thead><tr><th>Request #</th><th>Type</th><th class="std-loan" style="display:none">City Loan #</th><th>Requested On</th><th>Status</th><th>Assigned Staff</th><th>Action</th></tr></thead>
-<tbody><tr><td>REQ-12345678</td><td>Consent</td><td class="std-loan" style="display:none">14-121637-001</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Robert Crowley</td><td><button class="req-menu">⋮</button></td></tr>
-<tr><td>REQ-17784556</td><td>Reserve Withdrawal</td><td class="std-loan" style="display:none">14-121637-003</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Rochelle Cox</td><td><button class="req-menu">⋮</button></td></tr></tbody></table></div></div>
+<tbody><tr><td>REQ-12345678</td><td>Consent</td><td class="std-loan" style="display:none">14-121637-001</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Robert Crowley</td><td><button class="req-menu" onclick="toggleBorrowerRequestMenu(event,this)" title="Request actions">⋮</button></td></tr>
+<tr><td>REQ-17784556</td><td>Reserve Withdrawal</td><td class="std-loan" style="display:none">14-121637-003</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Rochelle Cox</td><td><button class="req-menu" onclick="toggleBorrowerRequestMenu(event,this)" title="Request actions">⋮</button></td></tr></tbody></table></div></div>
 <div class="restricted-note"><b>Affiliated User access:</b> You can view authorized loan information and submit and manage requests for loans assigned to you.</div>
 </section>
 <section class="view financial" id="loans"><div class="card" style="margin-top:26px;padding:24px"><h2 style="margin-top:0">Loan Agreements</h2><p style="color:#687b90">Authorized Tier 1 users can view applicable City loan information and loan documents here.</p><table><thead><tr><th>Loan #</th><th>Loan Type</th><th>Original Amount</th><th>Term</th><th>Documents</th></tr></thead><tbody><tr><td>14-121637-001</td><td>Residual Receipt</td><td>$9,000,000</td><td>504 months</td><td><button class="link">View Documents</button></td></tr></tbody></table></div></section>
@@ -3932,10 +3932,28 @@ if(route==='staff'){
 }
 })();
 </script><style>
-.borrower-request-menu{position:absolute;right:8px;top:100%;min-width:230px;background:#fff;border:1px solid #c8d5e5;border-radius:7px;box-shadow:0 8px 25px #12233c33;z-index:100;padding:5px;text-align:left}
+.borrower-request-menu{position:fixed;min-width:230px;background:#fff;border:1px solid #c8d5e5;border-radius:7px;box-shadow:0 8px 25px #12233c33;z-index:999999;padding:5px;text-align:left}
 .borrower-request-menu button{display:block;width:100%;border:0;background:white;text-align:left;padding:10px 12px;color:#173a67;cursor:pointer;font-weight:600}.borrower-request-menu button:hover{background:#edf4fc}.request-table td.action{position:relative;overflow:visible}
 </style><script>
-function toggleBorrowerRequestMenu(e,b){e.stopPropagation();document.querySelectorAll('.borrower-request-menu').forEach(x=>x.remove());const td=b.closest('td'),tr=b.closest('tr');const menu=document.createElement('div');menu.className='borrower-request-menu';const status=tr.cells[3]?.innerText.trim()||'';const id=tr.cells[0]?.innerText.trim()||'Request';const opts=[['View',()=>showBorrowerRequestDetails(id,tr)]];if(!/completed|cancelled/i.test(status)){opts.push(['Cancel Request',()=>{if(confirm('Cancel '+id+'?')){tr.cells[3].innerHTML='<span class="pill">Cancelled</span>';alert(id+' cancelled (demo).')}}]);}else{opts.push(['Download Determination Letter',()=>{const blob=new Blob(['LAHD Determination Letter\nRequest: '+id+'\nStatus: Completed\nDemo document only'],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=id+'-determination-demo.txt';a.click();URL.revokeObjectURL(a.href)}]);}opts.forEach(([name,fn])=>{const x=document.createElement('button');x.textContent=name;x.onclick=(ev)=>{ev.stopPropagation();menu.remove();fn()};menu.appendChild(x)});td.appendChild(menu)}
+function toggleBorrowerRequestMenu(e,b){
+ e.preventDefault();e.stopPropagation();
+ const existing=document.querySelector('.borrower-request-menu');
+ if(existing){const same=existing._trigger===b;existing.remove();if(same)return;}
+ const tr=b.closest('tr');if(!tr)return;
+ const cells=[...tr.cells].filter(c=>getComputedStyle(c).display!=='none');
+ const status=(cells.find(c=>/open|completed|cancelled|in review|submitted/i.test(c.innerText.trim()))?.innerText||'Open').trim();
+ const id=tr.cells[0]?.innerText.trim()||'Request';
+ const menu=document.createElement('div');menu.className='borrower-request-menu';menu._trigger=b;
+ menu.setAttribute('role','menu');menu.setAttribute('aria-label','Actions for '+id);
+ const add=(label,fn)=>{const item=document.createElement('button');item.type='button';item.textContent=label;item.setAttribute('role','menuitem');item.addEventListener('click',ev=>{ev.stopPropagation();menu.remove();fn()});menu.appendChild(item)};
+ add('View',()=>showBorrowerRequestDetails(id,tr));
+ if(!/completed|cancelled/i.test(status))add('Cancel Request',()=>{if(confirm('Cancel '+id+'?')){const statusCell=[...tr.cells].find(c=>/open|in review|submitted/i.test(c.innerText.trim()));if(statusCell)statusCell.innerHTML='<span class="pill">Cancelled</span>';alert(id+' cancelled (demo).')}});
+ if(/completed/i.test(status))add('Download Determination Letter',()=>{const blob=new Blob(['LAHD Determination Letter\nRequest: '+id+'\nStatus: Completed\nDemo document only'],{type:'text/plain'});const a=document.createElement('a');const url=URL.createObjectURL(blob);a.href=url;a.download=id+'-determination-demo.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+ document.body.appendChild(menu);
+ const r=b.getBoundingClientRect(),w=menu.offsetWidth,h=menu.offsetHeight;
+ menu.style.left=Math.max(8,Math.min(window.innerWidth-w-8,r.right-w))+'px';
+ menu.style.top=(r.bottom+h+8>window.innerHeight?Math.max(8,r.top-h-4):r.bottom+4)+'px';
+}
 document.addEventListener('click',()=>document.querySelectorAll('.borrower-request-menu').forEach(x=>x.remove()));
 </script>
 <style id="v100-borrower-request-details-style">
