@@ -1563,7 +1563,7 @@ Use the verification code provided by the borrower’s Primary User. If you do n
 <div class="pair"><span class="lbl">Address - </span><b>1234 Arlington Ave, Los Angeles, CA</b></div>
 </div><div class="loan-alert" style="margin:14px 22px 0;padding:12px 15px;border:1px solid #b72d3c;background:#fff1f3;border-radius:6px;color:#962738"><b>⚠   Non Compliant</b> <span>( Annual Financial Statements overdue )</span></div>
 <div class="loan-card-requests"><div class="loan-card-requests-head"><b>Requests</b><button class="btn primary">Add request</button></div>
-<table class="request-table"><thead><tr><th>Request #</th><th>Type</th><th>Requested On</th><th>Status</th><th>Assigned Staff</th><th class="action">Action</th></tr></thead><tbody><tr><td>REQ-12345678</td><td>Consent</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Robert Crowley</td><td class="action"><button class="dots">⋮</button></td></tr></tbody></table></div>
+<table class="request-table"><thead><tr><th>Request #</th><th>Type</th><th>Requested On</th><th>Status</th><th>Assigned Staff</th><th class="action">Action</th></tr></thead><tbody><tr><td>REQ-12345678</td><td>Consent</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Robert Crowley</td><td class="action"><button class="dots" onclick="toggleBorrowerRequestMenu(event,this)" title="Request actions">⋮</button></td></tr></tbody></table></div>
 </div>
 <div class="loan-card-simple">
 <div class="loan-card-top">
@@ -1584,7 +1584,7 @@ Use the verification code provided by the borrower’s Primary User. If you do n
 <div class="pair"><span class="lbl">Address - </span><b>1234 Arlington Ave, Los Angeles, CA</b></div>
 </div>
 <div class="loan-card-requests"><div class="loan-card-requests-head"><b>Requests</b><button class="btn primary">Add request</button></div>
-<table class="request-table"><thead><tr><th>Request #</th><th>Type</th><th>Requested On</th><th>Status</th><th>Assigned Staff</th><th class="action">Action</th></tr></thead><tbody><tr><td>REQ-17784556</td><td>Reserve Withdrawal</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Rochelle Cox</td><td class="action"><button class="dots">⋮</button></td></tr></tbody></table></div>
+<table class="request-table"><thead><tr><th>Request #</th><th>Type</th><th>Requested On</th><th>Status</th><th>Assigned Staff</th><th class="action">Action</th></tr></thead><tbody><tr><td>REQ-17784556</td><td>Reserve Withdrawal</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Rochelle Cox</td><td class="action"><button class="dots" onclick="toggleBorrowerRequestMenu(event,this)" title="Request actions">⋮</button></td></tr></tbody></table></div>
 </div>
 </div>
 </div>
@@ -1610,7 +1610,7 @@ Use the verification code provided by the borrower’s Primary User. If you do n
 <div class="loan-card-requests-head"><b>Requests</b><button class="btn primary">Add request</button></div>
 <table class="request-table">
 <thead><tr><th>Request #</th><th>Type</th><th>Requested On</th><th>Status</th><th>Assigned Staff</th><th class="action">Action</th></tr></thead>
-<tbody><tr><td>REQ-12345678</td><td>Consent</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Robert Crowley</td><td class="action"><button class="dots">⋮</button></td></tr></tbody>
+<tbody><tr><td>REQ-12345678</td><td>Consent</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Robert Crowley</td><td class="action"><button class="dots" onclick="toggleBorrowerRequestMenu(event,this)" title="Request actions">⋮</button></td></tr></tbody>
 </table>
 </div>
 </div>
@@ -3931,4 +3931,10 @@ if(route==='staff'){
  if(input){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));}
 }
 })();
+</script><style>
+.borrower-request-menu{position:absolute;right:8px;top:100%;min-width:230px;background:#fff;border:1px solid #c8d5e5;border-radius:7px;box-shadow:0 8px 25px #12233c33;z-index:100;padding:5px;text-align:left}
+.borrower-request-menu button{display:block;width:100%;border:0;background:white;text-align:left;padding:10px 12px;color:#173a67;cursor:pointer;font-weight:600}.borrower-request-menu button:hover{background:#edf4fc}.request-table td.action{position:relative;overflow:visible}
+</style><script>
+function toggleBorrowerRequestMenu(e,b){e.stopPropagation();document.querySelectorAll('.borrower-request-menu').forEach(x=>x.remove());const td=b.closest('td'),tr=b.closest('tr');const menu=document.createElement('div');menu.className='borrower-request-menu';const status=tr.cells[3]?.innerText.trim()||'';const id=tr.cells[0]?.innerText.trim()||'Request';const opts=[['View',()=>alert('Viewing '+id+' (demo).')]];if(!/completed|cancelled/i.test(status)){opts.push(['Cancel Request',()=>{if(confirm('Cancel '+id+'?')){tr.cells[3].innerHTML='<span class="pill">Cancelled</span>';alert(id+' cancelled (demo).')}}]);}else{opts.push(['Download Determination Letter',()=>{const blob=new Blob(['LAHD Determination Letter\nRequest: '+id+'\nStatus: Completed\nDemo document only'],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=id+'-determination-demo.txt';a.click();URL.revokeObjectURL(a.href)}]);}opts.forEach(([name,fn])=>{const x=document.createElement('button');x.textContent=name;x.onclick=(ev)=>{ev.stopPropagation();menu.remove();fn()};menu.appendChild(x)});td.appendChild(menu)}
+document.addEventListener('click',()=>document.querySelectorAll('.borrower-request-menu').forEach(x=>x.remove()));
 </script></body></html>

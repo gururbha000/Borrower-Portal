@@ -1490,6 +1490,18 @@ html[data-v96-route="transaction"] .demoSwitch,
 html[data-v96-route="reserve"] .demoSwitch {display:none!important}
 .v96-nav{position:relative;z-index:9999;background:#173a60;padding:11px 16px;display:flex;gap:17px;flex-wrap:wrap;font:12px Arial}
 .v96-nav a{color:white;text-decoration:none}.v96-nav a:hover{text-decoration:underline}
+</style><style id="v99-reserve-layout">
+#p3 .detailGrid.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:22px;row-gap:18px;align-items:start}
+#p3 .detailGrid.three>div:not(.wide){display:flex;flex-direction:column;align-items:stretch;gap:7px;min-width:0}
+#p3 .detailGrid.three>div>span{display:block;min-height:20px;font-weight:500;line-height:1.3}
+#p3 .detailGrid.three>div>input,#p3 .detailGrid.three>div>select{box-sizing:border-box;width:100%;height:40px;margin:0}
+#p3 .detailGrid.three>div:nth-child(4)>span{min-height:65px}
+#p3 .detailGrid.three>div:nth-child(5)>span,#p3 .detailGrid.three>div:nth-child(6)>span{min-height:65px}
+#p3 .detailGrid.three>.wide{display:flex;flex-direction:column;gap:8px;align-items:stretch}
+#p3 .detailGrid.three>.wide textarea{width:100%;box-sizing:border-box}
+#p3 .detailCard{padding:22px}
+@media(max-width:850px){#p3 .detailGrid.three{grid-template-columns:1fr 1fr}#p3 .detailGrid.three>div:nth-child(n)>span{min-height:auto}}
+@media(max-width:600px){#p3 .detailGrid.three{grid-template-columns:1fr}}
 </style></head>
 <body><nav class="v96-nav"><a href="index.html">Sign In</a><a href="borrower-portal.html">Borrower Dashboard</a><a href="staff-dashboard.html">Staff Dashboard</a><a href="loan-portfolio-transactions.html">Transactions</a><a href="reserve-withdrawal.html">Reserve Withdrawal</a></nav>
 <div class="onboard-shell active" id="onboarding">
@@ -2491,7 +2503,7 @@ syncInvoiceTotal();
 <div class="staffDocModalHead"><h3 id="staffDocModalTitle">Add Document</h3><button onclick="closeStaffDocModal()" type="button">×</button></div>
 <div class="staffDocForm"><label>Document / File<input id="staffDocName" placeholder="Enter or select document name" type="text"/></label><label>Document Type<select id="staffDocType"><option>Supporting Documentation</option><option>Request Letter</option><option>Reserve Balance Support</option><option>Invoice / Estimate</option><option>Emergency Justification</option><option>Invoice Detail Spreadsheet</option><option>Staff Correspondence</option><option>Other</option></select></label><label>Related Invoice #<input id="staffDocInvoice" placeholder="Optional" type="text"/></label><label>Description / Notes<input id="staffDocNotes" placeholder="Optional" type="text"/></label></div>
 <div class="staffDocModalActions"><button onclick="closeStaffDocModal()" type="button">Cancel</button><button class="primary" onclick="saveStaffDoc()" type="button">Save</button></div></div></div>
-<div class="staffGrid"><aside class="reviewNav"><h2>Review Steps</h2><button class="on" data-p="p1">✓ Request Information</button><button data-p="p2">✓ Project / Loan Info</button><button data-p="p3">✓ Reserve Withdrawal</button><button data-p="p4">✓ Invoice / Bid Info</button><button style="display:none!important" data-p="p5">✓ Submitted Documents</button><hr/><button>Messages 🔴 1</button></aside>
+<div class="staffGrid"><aside class="reviewNav"><h2>Review Steps</h2><button class="on" data-p="p1">✓ Request Information</button><button data-p="p2">✓ Project / Loan Info</button><button data-p="p3">✓ Reserve Withdrawal</button><button data-p="p4">✓ Invoice / Bid Info</button><button data-p="p5">✓ Submitted Documents</button><hr/><button>Messages 🔴 1</button></aside>
 <main class="reviewMain">
 <section class="reviewPanel on" id="p1"><div class="priorRequestNotice">
 <div aria-hidden="true" class="priorNoticeIcon">
@@ -2600,7 +2612,7 @@ syncInvoiceTotal();
 </section>
 <section class="reviewPanel" id="p3"><h2>Step 3 - Reserve Withdrawal</h2>
 <div class="detailCard"><div class="detailGrid three">
-<div><span>Reserve Fund:</span><select class="reserveStaffEdit" data-reserve-field="fund" disabled><option>Replacement Reserve</option><option>Operating Reserve</option></select></div>
+<div><span>Reserve Fund:</span><select class="reserveStaffEdit" data-reserve-field="fund" disabled><option>Replacement Reserve</option><option>Operating Reserve</option><option>Transitional Reserve</option><option>Other Reserve</option></select></div>
 <div><span>Withdrawal Amount:</span><input class="reserveStaffEdit" value="$78,500" disabled/></div>
 <div><span>Fiscal Year:</span><input class="reserveStaffEdit" value="2026" disabled/></div>
 <div><span>Current Reserve Balance:<small class="reserveFieldHint">Borrower/requester-provided</small><a class="reserveBalanceLink" href="portfolio-management.html#reserve-balances" title="Open LAHD Portfolio Management reserve balances">View LAHD-maintained balance ↗</a></span><input class="reserveStaffEdit" value="$214,630" disabled/></div>
@@ -2685,55 +2697,7 @@ syncInvoiceTotal();
 </div>
 </div>
 </section>
-<section class="reviewPanel" id="p5" style="display:none!important">
-<h2>Step 5 - Documents Submitted (by Requestor)</h2>
-<div class="docsReviewTableWrap">
-<table class="docsReviewTable">
-<thead>
-<tr>
-<th>Document Name</th>
-<th>Type</th>
-<th>Related Invoice #</th>
-<th>Uploaded by</th>
-<th>Uploaded On</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a class="docLink" href="#">Signed Reserve Withdrawal Request Letter.pdf</a></td>
-<td>Request Letter</td><td>—</td><td>John Doe</td><td>09/25/2026</td>
-</tr>
-<tr>
-<td><a class="docLink" href="#">Reserve Bank Statement - Sep 2026.pdf</a></td>
-<td>Reserve Balance Support</td><td>—</td><td>John Doe</td><td>09/25/2026</td>
-</tr>
-<tr class="invoiceDocRow">
-<td><a class="docLink" href="#">ABC Roofing - EST-1048.pdf</a></td>
-<td>Invoice / Estimate</td><td><strong>EST-1048</strong></td><td>John Doe</td><td>09/25/2026</td>
-</tr>
-<tr class="invoiceDocRow">
-<td><a class="docLink" href="#">Westside Restoration - EST-2281.pdf</a></td>
-<td>Invoice / Estimate</td><td><strong>EST-2281</strong></td><td>John Doe</td><td>09/25/2026</td>
-</tr>
-<tr>
-<td><a class="docLink" href="#">Emergency Justification - Roof Leaks.pdf</a></td>
-<td>Emergency Justification</td><td>—</td><td>John Doe</td><td>09/25/2026</td>
-</tr>
-<tr>
-<td><a class="docLink" href="#">Roof Leak Supporting Photos.pdf</a></td>
-<td>Supporting Documentation</td><td>—</td><td>John Doe</td><td>09/25/2026</td>
-</tr>
-<tr>
-<td><a class="docLink" href="#">Reserve Withdrawal Invoice Detail.xlsx</a></td>
-<td>Invoice Detail Spreadsheet</td><td>EST-1048; EST-2281</td><td>John Doe</td><td>09/25/2026</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="docsHelpText">
-    Invoice / estimate documents are tied to the corresponding Invoice # from the submitted Invoice / Bid Information so staff can verify each requested amount against its supporting document.
-  </div>
-</section>
+
 <div class="footerActions"><button>Return to Borrower</button><button class="primary">Save &amp; Continue →</button></div></main></div></div></div><div class="demoSwitch"><button class="on" id="borrowerBtn">Borrower Submission</button><button id="staffBtn">Staff Review</button></div><script>(function(){const bv=document.getElementById('borrowerView'),sv=document.getElementById('staffView'),bb=document.getElementById('borrowerBtn'),sb=document.getElementById('staffBtn');function showStaff(x){bv.style.display=x?'none':'';sv.style.display=x?'block':'none';bb.classList.toggle('on',!x);sb.classList.toggle('on',x);scrollTo(0,0)}bb.onclick=()=>showStaff(false);sb.onclick=()=>showStaff(true);document.querySelectorAll('.reviewNav button[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.reviewNav button[data-p]').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.reviewPanel').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById(b.dataset.p).classList.add('on')})})();</script><script>
 function downloadSubmittedInvoices(){
   const rows = [
@@ -3474,9 +3438,11 @@ document.addEventListener('DOMContentLoaded',function(){
 .relBadge{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#d9eaff;color:#145a9e;font-size:10px}
 </style><script>
 function goToRelatedRequests(){
+  const linked=document.getElementById("relatedRequestInline"); if(linked) linked.style.display="block";
+  const step=document.querySelector('.reviewNav button[data-p="p1"]'); if(step) step.click();
   const target=document.querySelector('.requestConnectionsInline');
   if(target){
-    target.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'center'}),80);
     setTimeout(function(){ target.style.boxShadow='0 0 0 2px #8fb7df'; setTimeout(()=>target.style.boxShadow='',1400); },350);
   }
 }
@@ -3508,7 +3474,7 @@ function goToRelatedRequests(){
 .relatedRequestControl:hover{background:#f2f7fc}
 .relatedControlIcon{font-size:13px;color:#1764a8}
 .relatedControlCount{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:#e2eef9;color:#195b97;font-size:10px}
-.relatedRequestNavChip{display:none!important}
+.relatedRequestNavChip{display:inline-flex!important}
 </style><style>
 /* v69 approval validation */
 #approveSummary.approvalSummary{grid-template-columns:repeat(4,1fr)}
