@@ -4007,4 +4007,22 @@ if(route==='staff'){
   document.querySelectorAll('#dashboard .request-table .dots, #dashboard .old-global-requests .req-menu').forEach(b=>{b.setAttribute('aria-label','Request actions');b.setAttribute('aria-haspopup','menu');b.setAttribute('aria-expanded','false');});
 })();
 </script>
+<script id="v105-dashboard-role-entry">
+/* Select the requested dashboard role after navigation from registration. */
+(function(){
+  const role=new URLSearchParams(window.location.search).get('role');
+  if(!['tier1','tier2','basic'].includes(role))return;
+  function applyRole(){
+    const button=document.getElementById(role==='tier2'?'tier2Btn':role==='basic'?'basicUserDemo':'tier1Btn');
+    if(button)button.click();
+    const onboarding=document.getElementById('onboarding');
+    const shell=document.getElementById('portalShell');
+    if(onboarding)onboarding.classList.remove('active');
+    if(shell)shell.classList.remove('hidden-for-onboard');
+    window.scrollTo(0,0);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applyRole,{once:true});
+  else applyRole();
+})();
+</script>
 </body></html>
