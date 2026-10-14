@@ -3953,4 +3953,14 @@ function showBorrowerRequestDetails(id,row){
  const close=document.createElement('button');close.textContent='Close';close.onclick=()=>overlay.remove();card.appendChild(close);overlay.appendChild(card);overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove()});document.body.appendChild(overlay);
 }
 </script>
+
+<style id="v101-tab-visibility-fix">
+/* Explicitly hide all review grids while another top-level tab is selected. */
+html[data-v96-route="staff"] #staffView.review-doc-mode .staffGrid,
+html[data-v96-route="staff"] #staffView.staff-activity-mode .staffGrid { display:none !important; }
+html[data-v96-route="staff"] #staffView.review-doc-mode #staffDocumentReviewWorkspace { display:block !important; }
+html[data-v96-route="staff"] #staffView.staff-activity-mode #staffActivityLogWorkspace { display:block !important; }
+html[data-v96-route="staff"] #staffView.staff-activity-mode #staffDocumentReviewWorkspace,
+html[data-v96-route="staff"] #staffView.review-doc-mode #staffActivityLogWorkspace { display:none !important; }
+</style>
 </body></html>
