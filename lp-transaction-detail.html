@@ -4370,4 +4370,38 @@ window.v120OpenSubmittedRequest=function(d){
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);
  else start();
 })();
-</script></body></html>
+</script><script id="v128StandaloneRouting">/* v128: Explicit standalone-page initialization. Existing staff controls remain unchanged. */
+(function(){
+ const KIND='loan';
+ function display(id,value){const el=document.getElementById(id);if(el)el.style.setProperty('display',value,'important');}
+ function init(){
+  document.documentElement.setAttribute('data-v96-route','staff');
+  display('onboarding','none');display('portalShell','none');display('integratedRequestView','block');
+  display('borrowerView','none');display('staffView','block');
+  const wrap=document.getElementById('staffWrap'),view=document.getElementById('staffView');
+  if(!wrap||!view)return;
+  wrap.classList.toggle('queueMode',KIND==='queue');
+  wrap.classList.toggle('ow-mode',KIND==='loan');
+  view.classList.toggle('queue-mode',KIND==='queue');
+  if(KIND==='queue'){
+   const queue=document.getElementById('staffQueue');if(queue)queue.style.setProperty('display','block','important');
+  }else if(KIND==='loan'){
+   const work=document.getElementById('ownershipStaffWorkspace');if(work)work.style.setProperty('display','block','important');
+   const info=document.getElementById('owInfo');if(info)info.style.setProperty('display','block');
+  }else{
+   document.querySelector('[data-queue="reserve"]')?.click();
+   wrap.classList.remove('queueMode','ow-mode');view.classList.remove('queue-mode');
+  }
+ }
+ function back(event){
+  if(KIND==='queue')return;
+  const target=event.target.closest?.('#owBack,.staffBanner strong');
+  if(!target)return;
+  if(target.id==='owBack'||(target.textContent||'').includes('Back')){
+   event.preventDefault();event.stopImmediatePropagation();location.assign('staff-dashboard.html');
+  }
+ }
+ window.addEventListener('click',back,true);
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+ window.addEventListener('pageshow',init);
+})();</script></body></html>
