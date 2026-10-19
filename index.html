@@ -4329,37 +4329,45 @@ window.v120OpenSubmittedRequest=function(d){
   e.preventDefault();window.v120OpenSubmittedRequest({number:cell.textContent.trim(),type:cells[1]?.textContent.trim(),date:cells[legacy?3:2]?.textContent.trim(),status:cells[legacy?4:3]?.textContent.trim()});
  },true);
 })();</script><script>
-/* GitHub Pages multipage navigation: preserve original mock-up logic */
+/* v124 direct-entry routing and navigation; no additional top-level links. */
 (function(){
-const PAGE="index";
-function go(file,id){location.href=file+(id?'?requestId='+encodeURIComponent(id):'')}
-document.addEventListener('click',function(e){
- const a=e.target.closest('a[href]');
- if(a && /^(staff-dashboard|lp-transaction-detail|reserve-withdrawal-detail|index)\.html/.test(a.getAttribute('href')||''))return;
- const q=e.target.closest('#loanQueue .queueLink,#reserveQueue .queueLink');
- if(q && PAGE==='staff-dashboard'){
-  e.preventDefault();e.stopImmediatePropagation();
-  const id=q.textContent.trim();go(q.closest('#loanQueue')?'lp-transaction-detail.html':'reserve-withdrawal-detail.html',id);return;
+ const PAGE="index";
+ function go(file,id){window.location.href=file+(id?'?requestId='+encodeURIComponent(id):'');}
+ function showStaff(){
+  const b=document.getElementById('borrowerView'),v=document.getElementById('staffView');
+  if(b)b.style.setProperty('display','none','important');
+  if(v)v.style.setProperty('display','block','important');
+  document.getElementById('borrowerBtn')?.classList.remove('on');
+  document.getElementById('staffBtn')?.classList.add('on');
  }
- const back=e.target.closest('#owBack,.staffBanner strong');
- if(back && PAGE!=='staff-dashboard' && (back.id==='owBack'||back.textContent.includes('Back'))){e.preventDefault();e.stopImmediatePropagation();go('staff-dashboard.html');return}
-},true);
-function start(){
- if(PAGE==='index')return;
- const staff=document.getElementById('staffBtn');if(staff)staff.click();
- if(PAGE==='staff-dashboard'){
-  const wrap=document.getElementById('staffWrap');if(wrap){wrap.classList.add('queueMode');wrap.classList.remove('ow-mode')}
-  const view=document.getElementById('staffView');if(view)view.classList.add('queue-mode');
- } else if(PAGE==='lp-transaction-detail'){
-  const btn=document.getElementById('openOwnershipStaff');if(btn)btn.click();
-  else {const wrap=document.getElementById('staffWrap');if(wrap){wrap.classList.add('ow-mode');wrap.classList.remove('queueMode')}document.getElementById('staffView')?.classList.remove('queue-mode')}
- } else if(PAGE==='reserve-withdrawal-detail'){
-  const tab=document.querySelector('[data-queue="reserve"]');if(tab)tab.click();
-  const btn=document.getElementById('openCurrentReserve');if(btn)btn.click();
-  document.getElementById('staffView')?.classList.remove('queue-mode');
+ document.addEventListener('click',function(e){
+  const q=e.target.closest('#loanQueue .queueLink,#reserveQueue .queueLink');
+  if(q&&PAGE==='staff-dashboard'){
+   e.preventDefault();e.stopImmediatePropagation();
+   go(q.closest('#loanQueue')?'lp-transaction-detail.html':'reserve-withdrawal-detail.html',q.textContent.trim());return;
+  }
+  const back=e.target.closest('#owBack,.staffBanner strong');
+  if(back&&PAGE!=='staff-dashboard'&&PAGE!=='index'&&(back.id==='owBack'||back.textContent.includes('Back'))){
+   e.preventDefault();e.stopImmediatePropagation();go('staff-dashboard.html');
+  }
+ },true);
+ function start(){
+  if(PAGE==='index')return;
+  showStaff();
+  const wrap=document.getElementById('staffWrap'),view=document.getElementById('staffView');
+  if(PAGE==='staff-dashboard'){
+   wrap?.classList.add('queueMode');wrap?.classList.remove('ow-mode');view?.classList.add('queue-mode');
+  } else if(PAGE==='lp-transaction-detail'){
+   document.getElementById('openOwnershipStaff')?.click();
+   wrap?.classList.add('ow-mode');wrap?.classList.remove('queueMode');view?.classList.remove('queue-mode');
+  } else if(PAGE==='reserve-withdrawal-detail'){
+   document.querySelector('[data-queue="reserve"]')?.click();
+   document.getElementById('openCurrentReserve')?.click();
+   wrap?.classList.remove('queueMode');view?.classList.remove('queue-mode');
+  }
+  showStaff();window.scrollTo(0,0);
  }
- window.scrollTo(0,0);
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(start,0));else setTimeout(start,0);
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);
+ else start();
 })();
 </script></body></html>
