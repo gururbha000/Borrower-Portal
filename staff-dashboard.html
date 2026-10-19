@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html lang="en">
-<head><script>document.documentElement.setAttribute("data-v96-route","borrower");</script>
+<head><script>document.documentElement.setAttribute("data-v96-route","staff");</script>
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>LAHD Borrower Portal - Onboarding + Tier 1 / Tier 2</title>
 <style>
@@ -4370,4 +4370,37 @@ window.v120OpenSubmittedRequest=function(d){
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);
  else start();
 })();
-</script></body></html>
+</script>
+<style id="v126-staff-entry-css">
+/* Direct staff URL must show the parent workspace, not the borrower demo. */
+html[data-v96-route="staff"] #onboarding,
+html[data-v96-route="staff"] #portalShell {display:none!important}
+html[data-v96-route="staff"] #integratedRequestView {display:block!important;min-height:100vh!important}
+html[data-v96-route="staff"] #integratedRequestView #borrowerView {display:none!important}
+html[data-v96-route="staff"] #integratedRequestView #staffView {display:block!important}
+html[data-v96-route="staff"] #staffWrap .staffQueue {display:block!important}
+</style>
+<script id="v126-staff-entry-js">
+(function(){
+ function openStaffQueue(){
+  document.documentElement.setAttribute('data-v96-route','staff');
+  const ids=['onboarding','portalShell'];
+  ids.forEach(id=>{const e=document.getElementById(id);if(e)e.style.setProperty('display','none','important')});
+  const parent=document.getElementById('integratedRequestView');
+  if(parent)parent.style.setProperty('display','block','important');
+  const borrower=document.getElementById('borrowerView');
+  if(borrower)borrower.style.setProperty('display','none','important');
+  const staff=document.getElementById('staffView');
+  if(staff){staff.style.setProperty('display','block','important');staff.classList.remove('review-doc-mode')}
+  const wrap=document.getElementById('staffWrap');
+  if(wrap){wrap.classList.add('queueMode');wrap.classList.remove('ow-mode')}
+  const queue=document.getElementById('staffQueue');
+  if(queue)queue.style.setProperty('display','block','important');
+  if(staff)staff.classList.add('queue-mode');
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',openStaffQueue);
+ else openStaffQueue();
+ window.addEventListener('pageshow',openStaffQueue);
+})();
+</script>
+</body></html>
