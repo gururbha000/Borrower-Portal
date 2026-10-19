@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html lang="en">
-<head><script>document.documentElement.setAttribute("data-v96-route","home");</script>
+<head><script>document.documentElement.setAttribute("data-v96-route","borrower");</script>
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>LAHD Borrower Portal - Onboarding + Tier 1 / Tier 2</title>
 <style>
@@ -1470,17 +1470,17 @@ td input,td select{width:100%;height:34px;border:1px solid #aeb9c8;border-radius
 .v93-returning-help{margin-top:7px;color:#667b8f;font-size:10.5px}
 </style>
 <style id="v96-route-css">
-html[data-v96-route="home"] #onboarding.active {display:block!important}
-html[data-v96-route="home"] #portalShell {display:none!important}
-html[data-v96-route="home"] #integratedRequestView {display:none!important}
-html[data-v96-route="borrower"] #portalShell {display:block!important}
+/* v104: onboarding visibility follows .active after authorization/profile completion */
+/* v104: portal visibility follows .hidden-for-onboard */
+html[data-v96-route="borrower"] #integratedRequestView:not(.request-open) {display:none!important}
+html[data-v96-route="borrower"] #integratedRequestView.request-open {display:block!important}
+/* v104: do not override the onboarding hide class */
 html[data-v96-route="staff"] #integratedRequestView,
 html[data-v96-route="transaction"] #integratedRequestView,
 html[data-v96-route="reserve"] #integratedRequestView {display:block!important}
 html[data-v96-route="staff"] #borrowerView {display:none!important}
 html[data-v96-route="staff"] #staffView {display:block!important}
-html[data-v96-route="staff"] #staffWrap.queueMode .staffQueue {display:block!important}
-html[data-v96-route="staff"] #staffWrap:not(.queueMode) .staffQueue {display:none!important}
+html[data-v96-route="staff"] #staffWrap .staffQueue {display:block!important}
 html[data-v96-route="transaction"] #staffView,
 html[data-v96-route="reserve"] #staffView {display:none!important}
 html[data-v96-route="transaction"] #borrowerView,
@@ -1490,8 +1490,112 @@ html[data-v96-route="transaction"] .demoSwitch,
 html[data-v96-route="reserve"] .demoSwitch {display:none!important}
 .v96-nav{position:relative;z-index:9999;background:#173a60;padding:11px 16px;display:flex;gap:17px;flex-wrap:wrap;font:12px Arial}
 .v96-nav a{color:white;text-decoration:none}.v96-nav a:hover{text-decoration:underline}
-</style></head>
-<body><nav class="v96-nav"><a href="index.html">Sign In</a><a href="borrower-portal.html">Borrower Dashboard</a><a href="staff-dashboard.html">Staff Dashboard</a><a href="loan-portfolio-transactions.html">Transactions</a><a href="reserve-withdrawal.html">Reserve Withdrawal</a></nav>
+</style><style id="v103-borrower-request-actions-css">
+/* Borrower Dashboard only: render the menu outside overflow-clipped loan cards. */
+#borrowerRequestActionMenu{position:fixed;z-index:2147483000;display:none;min-width:230px;padding:6px;background:white;border:1px solid #cbd6e2;border-radius:7px;box-shadow:0 12px 32px #1b35513d;font:13px Arial,sans-serif}
+#borrowerRequestActionMenu.open{display:block}
+#borrowerRequestActionMenu button{display:block;width:100%;border:0;background:white;text-align:left;padding:11px 12px;border-radius:4px;color:#213b59;cursor:pointer;font-weight:600}
+#borrowerRequestActionMenu button:hover,#borrowerRequestActionMenu button:focus{background:#edf4fa}
+#borrowerRequestActionMenu button:disabled{color:#8c9aaa;cursor:not-allowed;background:#fff}
+#borrowerRequestActionMenu .menu-separator{height:1px;background:#e5ebf1;margin:4px 0}
+#dashboard .request-table .dots{font-size:24px;padding:5px 12px;min-width:38px;min-height:34px;border-radius:5px}
+#dashboard .request-table .dots:hover,#dashboard .request-table .dots[aria-expanded="true"]{background:#e8f1fa}
+#borrowerRequestViewModal{position:fixed;inset:0;z-index:2147483001;background:#14283c88;display:none;align-items:center;justify-content:center;padding:20px}
+#borrowerRequestViewModal.open{display:flex}
+#borrowerRequestViewModal .request-dialog{width:min(510px,96vw);background:#fff;border-radius:9px;box-shadow:0 18px 45px #0004;padding:24px;font:14px Arial,sans-serif}
+#borrowerRequestViewModal dl{display:grid;grid-template-columns:150px 1fr;gap:12px;margin:18px 0}
+#borrowerRequestViewModal dt{color:#65798e}#borrowerRequestViewModal dd{margin:0;font-weight:600}
+</style>
+<style id="v107-style">
+/* v107: scoped ownership transaction additions; leave v106 styles intact */
+#v107ChangeBorrower .section-body label{display:block;font-size:12px;font-weight:bold;margin:9px 0;color:#44596e}
+#v107ChangeBorrower .section-body label input,#v107ChangeBorrower .section-body label select,#v107ChangeBorrower .section-body label textarea{display:block;width:100%;box-sizing:border-box;padding:10px;border:1px solid #c8d5e0;border-radius:4px;margin-top:6px;font:inherit}
+#v107ChangeBorrower .section-body input[readonly]{background:#f2f5f8}
+#v107ChangeBorrower .compare{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+#v107ChangeBorrower .compare>div{border:1px solid #dce4ed;border-radius:6px;padding:15px}
+#v107ChangeBorrower .section-body h3,#v107ChangeDocs .section-body h3{font-size:15px;margin:16px 0 10px}
+#v107ChangeDocs .docline{display:grid;grid-template-columns:minmax(0,1fr) 220px 75px;align-items:center;gap:10px;padding:12px;border-bottom:1px solid #e2e8ef}
+#v107ChangeDocs .docline input{max-width:220px}
+#v107ChangeDocs .docline small{color:#986619}
+#v107ChangeDocs .invitebar{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:16px;background:#f3f8fc;margin-top:16px;border-radius:6px}
+#v107ChangeDocs .invitebar p{font-size:12px;color:#65768a}
+#v107Overlay{position:fixed;inset:0;background:#102d49aa;display:none;align-items:center;justify-content:center;z-index:9999}
+#v107Overlay.open{display:flex}
+#v107Overlay .dialog{width:min(580px,94vw);max-height:88vh;overflow-y:auto;background:white;border-radius:9px;padding:22px}
+#v107Overlay .dialog label{display:block;margin:12px 0;font-size:13px}
+#v107Overlay .dialog input:not([type=checkbox]),#v107Overlay .dialog select{display:block;width:100%;padding:9px;box-sizing:border-box;margin-top:4px}
+#v107Overlay .dialog button{margin:8px}
+#v107ChangeBorrower .v107-info{padding:11px 13px;border:1px solid #c7ddec;background:#f0f7fc;border-radius:5px;margin-bottom:14px;color:#34566f}
+#v107StatusBar{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;background:#eef6fc;border:1px solid #c5ddec;padding:13px 16px;border-radius:6px;margin:10px 0}
+#v107StatusBar[hidden],#v107ChangeBorrower[hidden],#v107ChangeDocs[hidden]{display:none!important}
+@media(max-width:700px){#v107ChangeBorrower .compare,#v107ChangeBorrower .grid3{grid-template-columns:1fr}#v107ChangeDocs .docline{grid-template-columns:1fr}#v107ChangeDocs .invitebar{flex-direction:column;align-items:flex-start}}
+</style><style>
+/* v108: ownership document requirements */
+#v107ChangeDocs .v108-summary{padding:13px 16px;background:#eff6fc;border:1px solid #c9dfef;border-radius:6px;color:#274e70;font-weight:700;margin:12px 0 18px}
+#v107ChangeDocs .v108-note{font-size:12px;color:#60768b;margin:2px 0 12px;line-height:1.5}
+#v107ChangeDocs .docline{align-items:center;gap:12px}
+#v107ChangeDocs .docline>span:first-child{line-height:1.5}
+#v107ChangeDocs .v108-requirement{display:inline-block;font-size:11px;line-height:1.4;border-radius:12px;padding:3px 9px;margin:3px 0 3px 9px;font-weight:700;white-space:nowrap;vertical-align:middle}
+#v107ChangeDocs .v108-requirement.required{background:#fff0ef;color:#a13a30;border:1px solid #e8b5ae}
+#v107ChangeDocs .v108-requirement.conditional{background:#fff6e4;color:#885d12;border:1px solid #e8cf99}
+#v107ChangeDocs .v108-requirement.optional,#v107ChangeDocs .v108-requirement.buyer{background:#eef2f6;color:#53667b;border:1px solid #d7e0e9}
+#v107ChangeDocs .docline.v108-missing{background:#fff9f8;outline:1px solid #edc8c3}
+</style><style>
+#ownershipStaffWorkspace{display:none;font-family:Arial,sans-serif;color:#263b50;padding:22px 26px 42px;background:#f4f7fa;min-height:70vh}#staffWrap.ow-mode>#ownershipStaffWorkspace{display:block}#staffWrap.ow-mode>.staffQueue,#staffWrap.ow-mode>.requestOnlyChrome,#staffWrap.ow-mode>.staffGrid,#staffWrap.ow-mode>.staffDocWorkspace,#staffWrap.ow-mode>.staffActivityLogWorkspace,#staffWrap.ow-mode>.supervisorApprovalOverlay,#staffWrap.ow-mode>.supervisorApprovalBanner,#staffWrap.ow-mode>.approvalLetterPanel{display:none!important}
+.ow-head,.ow-toolbar,.ow-panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.ow-head h2{margin:6px 0;font-size:23px}.ow-eyebrow,.ow-sub,.ow-muted{color:#62778b;font-size:12px}.ow-toolbar{margin:18px 0;background:white;padding:12px;border:1px solid #dbe4ed;border-radius:7px;justify-content:flex-start}.ow-toolbar button,.ow-panel button,.ow-dialog button{padding:9px 13px;border:1px solid #b9cbdc;border-radius:5px;background:white;color:#254c6e;cursor:pointer;font-weight:600}.ow-toolbar .ow-primary,.ow-panel .ow-primary,.ow-dialog .ow-primary{background:#155c91;color:white;border-color:#155c91}.ow-action{margin-left:auto;position:relative}.ow-menu{position:absolute;right:0;top:40px;z-index:30;background:white;border:1px solid #d3e0ea;box-shadow:0 6px 20px #203b551e;width:210px;padding:5px}.ow-menu button{display:block;width:100%;border:0;text-align:left}.ow-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;background:white;border:1px solid #dbe4ed;border-radius:7px;padding:18px;margin-bottom:18px}.ow-summary>div,.ow-fields>div{display:flex;flex-direction:column;gap:5px;min-width:0}.ow-summary small,.ow-fields small{font-size:11px;color:#6c7e90}.ow-summary strong,.ow-fields strong{font-size:13px;overflow-wrap:anywhere}.ow-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px}.ow-sidebar,.ow-panel{background:white;border:1px solid #dbe4ed;border-radius:7px;padding:18px;margin-bottom:17px}.ow-sidebar{align-self:start;position:sticky;top:10px}.ow-sidebar h3,.ow-panel h3{font-size:17px;margin:0 0 15px}.ow-sidebar button{display:block;width:100%;text-align:left;padding:12px 8px;border:0;border-bottom:1px solid #e8edf2;background:white;color:#34546f;cursor:pointer}.ow-tip,.ow-note{font-size:12px;line-height:1.5;color:#486780;background:#eff6fc;border:1px solid #d5e7f4;padding:12px;border-radius:5px;margin:14px 0}.ow-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:12px 0}.ow-two{display:grid;grid-template-columns:1fr 1fr;gap:20px}.ow-two>div{border:1px solid #dce5ee;border-radius:7px;padding:16px}.ow-two h4{margin:0 0 12px}.ow-panel label{display:block;font-size:12px;font-weight:700;color:#36516b;margin:12px 0}.ow-panel textarea,.ow-panel select,.ow-panel input,.ow-dialog input,.ow-dialog textarea,.ow-dialog select{box-sizing:border-box;border:1px solid #cbd7e3;border-radius:4px;padding:8px;font:inherit;color:#273d51}.ow-panel textarea{width:100%;min-height:70px;margin-top:6px}.ow-panel textarea[readonly]{background:#f5f7fa}.ow-table-scroll{overflow:auto}.ow-table{width:100%;border-collapse:collapse;min-width:850px;font-size:12px}.ow-table th{text-align:left;background:#f2f6fa;color:#38556e}.ow-table td,.ow-table th{padding:10px;border-bottom:1px solid #e3eaf0;vertical-align:middle}.ow-table td:first-child{min-width:290px}.ow-table .ow-review{width:165px}.ow-table .ow-comment{width:160px}.ow-pill{display:inline-block;background:#fff3df;color:#8b5d12;border:1px solid #f0dbb1;padding:5px 9px;border-radius:15px;font-size:11px}.ow-docstats{display:flex;gap:12px;margin:14px 0;font-size:12px;color:#4e6379}.ow-review-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 18px}.ow-review-grid select{display:block;width:100%;margin-top:6px}.ow-log{padding:11px;border-bottom:1px solid #e6ebf0;font-size:12px}.ow-dialog-shade:not([hidden]){position:fixed;inset:0;z-index:10000;background:#1c2c3b99;display:flex;align-items:center;justify-content:center}.ow-dialog{background:white;border-radius:8px;padding:24px;width:min(530px,92vw);box-shadow:0 15px 45px #0003}.ow-dialog input,.ow-dialog select,.ow-dialog textarea{width:100%;margin:8px 0 12px}.ow-dialog label{font-size:12px;display:block}.ow-dialog-actions{display:flex;justify-content:flex-end;gap:9px}.ow-dialog textarea{min-height:80px}@media(max-width:950px){.ow-layout,.ow-two{grid-template-columns:1fr}.ow-sidebar{position:static}.ow-summary{grid-template-columns:repeat(2,1fr)}}
+</style><style>.ow-received{background:#e6f5ed!important;color:#17653e!important;border-color:#b7dec8!important}.ow-view-doc{font-size:11px;white-space:nowrap;margin-left:6px}.ow-sample-note{border:1px solid #bcd9c9;background:#f0faf4;border-radius:5px;padding:10px 13px;font-size:12px;margin:10px 0}.ow-docstats{flex-wrap:wrap}</style><style>#owDocuments .ow-table{min-width:1340px;table-layout:fixed}#owDocuments .ow-table th:nth-child(1){width:33%}#owDocuments .ow-table th:nth-child(2){width:10%}#owDocuments .ow-table th:nth-child(3){width:9%}#owDocuments .ow-table th:nth-child(4){width:12%}#owDocuments .ow-table th:nth-child(5){width:10%}#owDocuments .ow-table th:nth-child(6){width:15%}#owDocuments .ow-table th:nth-child(7){width:11%}#owDocuments .ow-table td{vertical-align:middle}#owDocuments .ow-docname-link{color:#175b94;text-decoration:underline;font-weight:500;cursor:pointer}#owDocuments .ow-docname-link:hover{color:#0b3864}#owDocuments .ow-table td:nth-child(4),#owDocuments .ow-table td:nth-child(5){font-size:12px;white-space:normal}.ow-preview-overlay:not([hidden]){position:fixed;inset:0;background:#12263a88;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px}.ow-preview-dialog{width:min(560px,100%);background:#fff;padding:24px;border-radius:10px;box-shadow:0 12px 35px #0003;color:#18344c}.ow-preview-head{display:flex;justify-content:space-between;align-items:center}.ow-preview-head button{border:0;background:transparent;font-size:22px;cursor:pointer}.ow-preview-placeholder{padding:55px 20px;border:1px dashed #9eb6ca;background:#f6f9fc;text-align:center;line-height:2;margin:20px 0}.ow-preview-placeholder small{color:#64788c}</style><style>#ownershipStaffWorkspace .ow-head{padding-bottom:10px}#ownershipStaffWorkspace .ow-summary{margin-top:12px}#ownershipStaffWorkspace .ow-docstats{margin-top:12px}#ownershipStaffWorkspace .ow-sidebar button{font-size:14px}</style><style>
+#ownershipStaffWorkspace{background:#f3f6fa!important;padding:16px!important;color:#1a314d}
+#ownershipStaffWorkspace .ow-head{background:#fff;padding:16px 20px;border-bottom:1px solid #d4dfed;margin:-16px -16px 20px}
+#ownershipStaffWorkspace .ow-eyebrow{font-size:27px;font-weight:750;color:#1a314d}
+#ownershipStaffWorkspace .ow-summary{background:#eaf1fe;border:1px solid #bfd4f1;border-top:5px solid #2a5dab;border-radius:7px;padding:24px 20px;margin:0 0 20px;display:flex;align-items:center;gap:22px}
+#ownershipStaffWorkspace .ow-summary>div:not(.ow-summary-status){flex:1;min-width:130px}
+#ownershipStaffWorkspace .ow-summary-status{color:#344ec0;border:1px solid #a9b9ff;border-radius:25px;padding:10px 16px;white-space:nowrap;font-weight:650}
+#ownershipStaffWorkspace #owBack{background:transparent;border:0;color:#1c5392;font-size:16px;font-weight:700;white-space:nowrap}
+#ownershipStaffWorkspace .ow-toolbar{background:#edf0f4;border:1px solid #ccd6e3;border-radius:8px;padding:10px;margin:0 0 20px;justify-content:flex-start}
+#ownershipStaffWorkspace .ow-toolbar>.ow-action{margin-left:auto}
+#ownershipStaffWorkspace .ow-toolbar>button{padding:12px 22px;font-weight:650;border-radius:4px}
+#ownershipStaffWorkspace .ow-toolbar>button.ow-active-tab{background:#165586!important;color:#fff!important}
+#ownershipStaffWorkspace .ow-sidebar{background:#fff;border:1px solid #d1dce8;border-radius:9px;padding:20px;align-self:start}
+#ownershipStaffWorkspace .ow-sidebar button{display:block;width:100%;text-align:left;margin:7px 0;padding:13px 12px;background:#f4f6f9;border:1px solid #d3dce6;border-radius:5px}
+#ownershipStaffWorkspace .ow-sidebar button.ow-selected-step{background:#e6efff;border-color:#a9c5fb;color:#154e8c}
+#ownershipStaffWorkspace .ow-main{min-width:0}
+#ownershipStaffWorkspace .ow-panel{background:#fff;border:1px solid #d1dce8;border-radius:9px;padding:26px 30px}
+#ownershipStaffWorkspace .ow-panel>h3{font-size:23px;margin:0 0 22px}
+#ownershipStaffWorkspace .ow-info-cards{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:22px}
+#ownershipStaffWorkspace .ow-info-card{border:1px solid #cad8e8;border-radius:9px;padding:20px}
+#ownershipStaffWorkspace .ow-info-card h4{font-size:20px;margin:0 0 18px}
+#ownershipStaffWorkspace .ow-info-card .ow-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:1000px){#ownershipStaffWorkspace .ow-info-cards{grid-template-columns:1fr}#ownershipStaffWorkspace .ow-summary{flex-wrap:wrap}}
+</style><style>
+#ownershipStaffWorkspace .ow-ahis-overview{border:1px solid #cbd8e7;border-radius:10px;padding:22px 25px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 26px;background:white;margin:18px 0 20px}
+#ownershipStaffWorkspace .ow-ahis-overview>div{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+#ownershipStaffWorkspace .ow-ahis-overview span{color:#5a708b}
+#ownershipStaffWorkspace .ow-ahis-overview strong{color:#1a2f4c}
+#ownershipStaffWorkspace .ow-ahis-address{grid-column:1/-1}
+#ownershipStaffWorkspace .ow-ahis-guidance{border-left:5px solid #3263a4;background:#f3f6fa;padding:15px 18px;color:#243c5a;margin-bottom:22px}
+#ownershipStaffWorkspace .ow-ahis-card{border:1px solid #bdd3ec;border-radius:10px;overflow:hidden;background:white}
+#ownershipStaffWorkspace .ow-ahis-card-head{padding:19px 22px;background:#f2f7fc;display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid #d5e1ee}
+#ownershipStaffWorkspace .ow-ahis-card-head h4{margin:0 0 5px;font-size:18px;color:#23415f}
+#ownershipStaffWorkspace .ow-ahis-card-head p{margin:0;color:#617893;font-size:13px}
+#ownershipStaffWorkspace .ow-ahis-badge{background:#e5f5ec;color:#18683d;border-radius:30px;padding:8px 12px;font-weight:700;font-size:12px;white-space:nowrap}
+#ownershipStaffWorkspace .ow-ahis-badge.unsaved{background:#fff4dc;color:#95610a}
+#ownershipStaffWorkspace .ow-ahis-search{padding:22px;border-bottom:1px solid #d5e1ee}
+#ownershipStaffWorkspace .ow-ahis-search label{display:block;font-weight:700;color:#56708b;font-size:12px;margin-bottom:9px}
+#ownershipStaffWorkspace .ow-ahis-searchrow{display:flex;gap:10px;max-width:720px}
+#ownershipStaffWorkspace .ow-ahis-searchrow input{flex:1;min-width:0;padding:12px 14px;border:1px solid #b9cde3;border-radius:6px;font-size:14px}
+#ownershipStaffWorkspace .ow-ahis-searchrow button,#ownershipStaffWorkspace #owAhisSave{border:0;border-radius:6px;background:#1764ac;color:white;padding:12px 20px;font-weight:700;cursor:pointer}
+#ownershipStaffWorkspace .ow-ahis-results{margin-top:12px;border:1px solid #d5e1ee;border-radius:6px;max-width:720px}
+#ownershipStaffWorkspace .ow-ahis-result{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;border-bottom:1px solid #e2e9f1}
+#ownershipStaffWorkspace .ow-ahis-result:last-child{border-bottom:0}
+#ownershipStaffWorkspace .ow-ahis-result button{border:1px solid #1764ac;background:white;color:#1764ac;border-radius:5px;padding:7px 12px;cursor:pointer}
+#ownershipStaffWorkspace .ow-ahis-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px}
+#ownershipStaffWorkspace .ow-ahis-chip{display:inline-flex;align-items:center;background:#eaf4ff;border:1px solid #b4d6f6;color:#20517e;border-radius:24px;padding:7px 12px;margin:3px 5px;font-size:13px}
+#ownershipStaffWorkspace .ow-ahis-chip button{border:0;background:transparent;color:#20517e;margin-left:8px;cursor:pointer}
+#ownershipStaffWorkspace .ow-ahis-audit{padding:0 22px 18px;margin:0;color:#6b829c;font-size:12px}
+#ownershipStaffWorkspace .ow-ahis-feedback{padding:0 22px 12px;color:#205c40;font-size:13px}
+@media(max-width:850px){#ownershipStaffWorkspace .ow-ahis-overview{grid-template-columns:1fr}#ownershipStaffWorkspace .ow-ahis-bottom{flex-wrap:wrap}}
+</style><style>#owDocuments .ow-docstats{display:none!important}#owDocuments table th:nth-child(n+6),#owDocuments table td:nth-child(n+6){display:none!important}.ow-review-side{background:#fff;padding:20px;width:320px;overflow:auto;border-left:1px solid #dae1e9;display:flex;flex-direction:column;gap:14px}.ow-review-side button{padding:10px;border:1px solid #b8c8d7;border-radius:7px;background:white;cursor:pointer}.ow-review-side button.active{background:#e4f1ff;border-color:#2368b0}.ow-review-side textarea{width:100%;min-height:120px;border:1px solid #b8c8d7;border-radius:6px;padding:9px}.ow-preview-dialog{width:min(1400px,96vw)!important;max-width:none!important}.ow-review-layout{display:flex;min-height:65vh}.ow-review-layout>.ow-preview-content{flex:1;min-width:0}.ow-review-side .save{background:#135e99;color:white}.ow-review-side h3{margin:0}</style><style>#ownershipStaffWorkspace .ow-preview-overlay[hidden]{display:none!important}#ownershipStaffWorkspace .ow-preview-overlay:not([hidden]){display:flex!important;position:fixed!important;inset:0!important;z-index:999999!important;align-items:center!important;justify-content:center!important;background:rgba(16,30,50,.78)!important;padding:18px!important}#ownershipStaffWorkspace .ow-preview-dialog{background:white!important;border-radius:12px!important;width:min(1450px,97vw)!important;max-height:95vh!important;overflow:auto!important;box-shadow:0 16px 70px #0005!important}#ownershipStaffWorkspace .ow-preview-head{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid #d6e0eb}#ownershipStaffWorkspace .ow-review-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;min-height:65vh}#ownershipStaffWorkspace .ow-preview-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px;color:#526579;text-align:center}#ownershipStaffWorkspace .ow-review-side{width:auto}#ownershipStaffWorkspace #owPreviewName{padding:10px 22px;margin:0;font-size:14px;color:#51647c}#ownershipStaffWorkspace #owPreviewMeta{padding:12px 22px;font-size:12px;color:#63778d}#ownershipStaffWorkspace .ow-review-side label{font-weight:600}#ownershipStaffWorkspace .ow-review-side .save{margin-top:auto}#ownershipStaffWorkspace .ow-review-side button.active{background:#dbe9ff!important;border:2px solid #1b5e9c!important}#ownershipStaffWorkspace .ow-docname-link{cursor:pointer}@media(max-width:750px){#ownershipStaffWorkspace .ow-review-layout{grid-template-columns:1fr}#ownershipStaffWorkspace .ow-preview-placeholder{min-height:260px!important}}</style><style>#owDocuments .ow-inline-review{position:relative!important;inset:auto!important;z-index:auto!important;background:white!important;padding:0!important;width:100%!important;min-height:0!important;max-height:none!important;overflow:visible!important;border:1px solid #cbd7e5;border-radius:8px;margin-top:18px}#owDocuments .ow-inline-review[hidden]{display:none!important}#owDocuments .ow-inline-review .ow-preview-dialog{width:100%!important;max-width:none!important;max-height:none!important;height:auto!important;box-shadow:none!important;border:0!important;overflow:visible!important}#owDocuments .ow-inline-review .ow-review-layout{display:flex;min-height:500px}#owDocuments .ow-inline-review .ow-preview-placeholder{min-height:520px!important}#owDocuments .ow-inline-review .ow-review-side{width:300px;min-width:260px;flex:none}#owDocuments.ow-show-review .ow-table-wrap{display:none!important}#owDocuments.ow-show-review .ow-panel-head~.ow-note{display:none!important}#owDocuments.ow-show-review .ow-docstats{display:none!important}#owDocuments.ow-show-review .ow-inline-review{display:block!important}@media(max-width:800px){#owDocuments .ow-inline-review .ow-review-layout{flex-direction:column}#owDocuments .ow-inline-review .ow-review-side{width:100%}}</style><style>#integratedRequestView.v120-readonly #borrowerView > .topbar{display:none!important}#integratedRequestView.v120-readonly .category-grid,#integratedRequestView.v120-readonly .request-category-label,#integratedRequestView.v120-readonly #transactionFooter,#integratedRequestView.v120-readonly #v107ReturnEdit{display:none!important}#integratedRequestView.v120-readonly #v120ReadOnlyBanner{display:block!important}#integratedRequestView.v120-readonly input:not([type=file]),#integratedRequestView.v120-readonly select,#integratedRequestView.v120-readonly textarea{background:#f3f6fa!important;color:#2b4155!important;opacity:1!important}#integratedRequestView.v120-readonly .docline[data-v120-received] input[type=file]{display:none!important}#integratedRequestView.v120-readonly .docline[data-v120-received] small{color:#187448!important}#integratedRequestView.v120-readonly .docline[data-v120-received] small::before{content:'✓ ';}#integratedRequestView.v120-readonly .docline[data-v120-received] .v120-view{display:inline-block;margin-left:12px;color:#08649b;text-decoration:underline;cursor:pointer;background:none;border:0;font:inherit}#v120Preview{position:fixed;inset:0;background:#12243dcc;z-index:999999;display:none;align-items:center;justify-content:center;padding:20px}#v120Preview.open{display:flex}#v120Preview .v120-paper{background:white;border-radius:10px;width:min(750px,95vw);padding:30px;box-shadow:0 12px 35px #0003}</style></head>
+<body><nav id="githubPageNav" style="background:#173b63;color:white;padding:10px 20px;font:14px Arial;display:flex;gap:24px;flex-wrap:wrap"><a style="color:white" href="index.html">Borrower Portal</a><a style="color:white" href="staff-dashboard.html">Staff Dashboard</a><a style="color:white" href="lp-transaction-detail.html?requestId=LT-260322">LP Transaction Detail</a><a style="color:white" href="reserve-withdrawal-detail.html?requestId=RW-260298">Reserve Withdrawal Detail</a></nav><nav class="v96-nav"><a href="index.html">Sign In</a><a href="borrower-portal.html">Borrower Dashboard</a><a href="staff-dashboard.html">Staff Dashboard</a><a href="loan-portfolio-transactions.html">Transactions</a><a href="reserve-withdrawal.html">Reserve Withdrawal</a></nav>
 <div class="onboard-shell active" id="onboarding">
 <header class="top"><div class="brand"><div class="logo"></div><div><h1>Borrower Portal</h1><p>Los Angeles Housing Department</p></div></div><div class="profile"><div><b>Riverview Housing LLC</b><span id="profileRole">Maria Hernandez · Primary User</span></div><div class="avatar" id="avatar">MH</div></div></header>
 <div class="citybar">◉ An Official Website of the City of Los Angeles</div>
@@ -1506,19 +1610,19 @@ html[data-v96-route="reserve"] .demoSwitch {display:none!important}
 <div class="onboard-wrap">
 <section class="obpage" id="portalEntry" style="display:none"><div class="ob-card"><h1>LAHD Borrower Portal</h1><div class="info-callout"><b>Angeleno Account Required</b><br/>LAHD services use the City of Los Angeles unified authentication system. Actual Angeleno sign-in/account creation is outside this mock-up.</div><h2>Continue to Borrower Portal</h2><p>After Angeleno authentication, the portal determines whether you are a primary user or an affiliated user based on LAHD records.</p><div class="flow-choice"><button class="ob-btn primary" onclick="startFlow('tier1')">Demo: Sign in as Tier 1</button><button class="ob-btn" onclick="startFlow('tier2')">Demo: Sign in as Tier 2</button><button class="ob-btn" onclick="startBasicFirstTime()">Demo: Sign in as Basic User</button></div>
 <div class="v93-returning-wrap">
-  <div class="v93-or"><span>OR</span></div>
-  <button type="button" class="v93-returning-btn" onclick="returningUserLogin()">Returning User — Go to Dashboard</button>
-  <div class="v93-returning-help">For users who have already completed first-time portal setup.</div>
+<div class="v93-or"><span>OR</span></div>
+<button class="v93-returning-btn" onclick="returningUserLogin()" type="button">Returning User — Go to Dashboard</button>
+<div class="v93-returning-help">For users who have already completed first-time portal setup.</div>
 </div></div></section>
 <div class="stepper" id="steps" style="display:none"><div class="stepnode">Angeleno Sign-In</div><div class="stepnode">Basic Profile</div><div class="stepnode">Verify Access</div><div class="stepnode">Dashboard</div></div>
 <section class="obpage" id="basicprofile" style="display:none"><div class="ob-card">
 <span class="rolebadge">BASIC USER</span><h1 style="margin-top:12px">Complete Your Basic Profile</h1>
 <p>Enter your basic contact information to continue to the Borrower Portal.</p>
-<div class="ob-grid"><div class="ob-field"><label>Full Name</label><input value="John Doe"></div>
-<div class="ob-field"><label>Email</label><input readonly value="john.doe@yopmail.com"></div>
-<div class="ob-field"><label>Phone</label><input placeholder="(213) 555-0000"></div>
-<div class="ob-field"><label>Title / Role</label><input placeholder="Enter title or role"></div>
-<div class="ob-field"><label>Organization / Company</label><input placeholder="Enter organization or company"></div></div>
+<div class="ob-grid"><div class="ob-field"><label>Full Name</label><input value="John Doe"/></div>
+<div class="ob-field"><label>Email</label><input readonly="" value="john.doe@yopmail.com"/></div>
+<div class="ob-field"><label>Phone</label><input placeholder="(213) 555-0000"/></div>
+<div class="ob-field"><label>Title / Role</label><input placeholder="Enter title or role"/></div>
+<div class="ob-field"><label>Organization / Company</label><input placeholder="Enter organization or company"/></div></div>
 <div class="ob-actions"><button class="ob-btn primary" onclick="openBasicDashboardFirstTime()">Continue</button></div>
 </div></section>
 <section class="obpage" id="t1profile" style="display:none"><div class="ob-card"><span class="rolebadge">TIER 1 · PRIMARY USER</span><h1 style="margin-top:12px">Complete Your Basic Profile</h1><p>Your Angeleno account matches a primary/notice contact in LAHD records.</p><div class="ob-grid"><div class="ob-field"><label>Full Name</label><input value="Maria Hernandez"/></div><div class="ob-field"><label>Email</label><input readonly="" value="maria@riverviewhousing.com"/></div><div class="ob-field"><label>Phone</label><input placeholder="(213) 555-0000"/></div><div class="ob-field"><label>Title / Role</label><input value="Executive Director"/></div><div class="ob-field"><label>Organization / Company</label><input value="Riverview Housing LLC"/></div></div><div class="ob-actions"><button class="ob-btn primary" onclick="showOb('t1verify')">Continue</button></div></div></section>
@@ -1563,7 +1667,7 @@ Use the verification code provided by the borrower’s Primary User. If you do n
 <div class="pair"><span class="lbl">Address - </span><b>1234 Arlington Ave, Los Angeles, CA</b></div>
 </div><div class="loan-alert" style="margin:14px 22px 0;padding:12px 15px;border:1px solid #b72d3c;background:#fff1f3;border-radius:6px;color:#962738"><b>⚠   Non Compliant</b> <span>( Annual Financial Statements overdue )</span></div>
 <div class="loan-card-requests"><div class="loan-card-requests-head"><b>Requests</b><button class="btn primary">Add request</button></div>
-<table class="request-table"><thead><tr><th>Request #</th><th>Type</th><th>Requested On</th><th>Status</th><th>Assigned Staff</th><th class="action">Action</th></tr></thead><tbody><tr><td>REQ-12345678</td><td>Consent</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Robert Crowley</td><td class="action"><button class="dots" onclick="toggleBorrowerRequestMenu(event,this)" title="Request actions">⋮</button></td></tr><tr><td>REQ-12345002</td><td>Loan Amendment</td><td>08/15/2025</td><td><span class="pill">Completed</span></td><td>Robert Crowley</td><td class="action"><button class="dots" onclick="toggleBorrowerRequestMenu(event,this)" title="Request actions">⋮</button></td></tr></tbody></table></div>
+<table class="request-table"><thead><tr><th>Request #</th><th>Type</th><th>Requested On</th><th>Status</th><th>Assigned Staff</th><th class="action">Action</th></tr></thead><tbody><tr><td>REQ-12345678</td><td>Consent</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Robert Crowley</td><td class="action"><button class="dots">⋮</button></td></tr></tbody></table></div>
 </div>
 <div class="loan-card-simple">
 <div class="loan-card-top">
@@ -1584,7 +1688,7 @@ Use the verification code provided by the borrower’s Primary User. If you do n
 <div class="pair"><span class="lbl">Address - </span><b>1234 Arlington Ave, Los Angeles, CA</b></div>
 </div>
 <div class="loan-card-requests"><div class="loan-card-requests-head"><b>Requests</b><button class="btn primary">Add request</button></div>
-<table class="request-table"><thead><tr><th>Request #</th><th>Type</th><th>Requested On</th><th>Status</th><th>Assigned Staff</th><th class="action">Action</th></tr></thead><tbody><tr><td>REQ-17784556</td><td>Reserve Withdrawal</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Rochelle Cox</td><td class="action"><button class="dots" onclick="toggleBorrowerRequestMenu(event,this)" title="Request actions">⋮</button></td></tr></tbody></table></div>
+<table class="request-table"><thead><tr><th>Request #</th><th>Type</th><th>Requested On</th><th>Status</th><th>Assigned Staff</th><th class="action">Action</th></tr></thead><tbody><tr><td>REQ-17784556</td><td>Reserve Withdrawal</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Rochelle Cox</td><td class="action"><button class="dots">⋮</button></td></tr></tbody></table></div>
 </div>
 </div>
 </div>
@@ -1610,7 +1714,7 @@ Use the verification code provided by the borrower’s Primary User. If you do n
 <div class="loan-card-requests-head"><b>Requests</b><button class="btn primary">Add request</button></div>
 <table class="request-table">
 <thead><tr><th>Request #</th><th>Type</th><th>Requested On</th><th>Status</th><th>Assigned Staff</th><th class="action">Action</th></tr></thead>
-<tbody><tr><td>REQ-12345678</td><td>Consent</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Robert Crowley</td><td class="action"><button class="dots" onclick="toggleBorrowerRequestMenu(event,this)" title="Request actions">⋮</button></td></tr></tbody>
+<tbody><tr><td>REQ-12345678</td><td>Consent</td><td>10/23/2025</td><td><span class="pill">Open</span></td><td>Robert Crowley</td><td class="action"><button class="dots">⋮</button></td></tr></tbody>
 </table>
 </div>
 </div>
@@ -1809,13 +1913,10 @@ document.querySelectorAll('.req-link').forEach(function(btn){
  }
  function openAddRequest(){
    const req=document.getElementById('integratedRequestView');
-   if(!req) return;
-   [...document.body.children].forEach(el=>{
-     if(el!==req && el.tagName!=='SCRIPT' && el.tagName!=='STYLE'){
-       el.dataset.requestOldDisplay=el.style.display||'';
-       el.style.display='none';
-     }
-   });
+   const shell=document.getElementById('portalShell');
+   if(!req)return;
+   if(shell)shell.style.display='none';
+   req.classList.add('request-open');
    req.style.display='block';
    window.scrollTo(0,0);
  }
@@ -1835,7 +1936,7 @@ document.querySelectorAll('.req-link').forEach(function(btn){
 <div id="integratedRequestView" style="display:none;min-height:100vh;background:#f5f7fa"><div class="page" id="borrowerView">
 <div class="topbar">
 <button class="btn btn-primary" type="button">← Back to Dashboard</button>
-</div>
+</div><div id="v120ReadOnlyBanner" style="display:none;background:#eaf3fb;border:1px solid #a7cce9;border-radius:8px;padding:16px 20px;margin:12px 0 18px;font:14px Arial;color:#173c61"><div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap"><div><strong style="font-size:18px">Submitted Application — Read Only</strong><div id="v120RequestMeta" style="margin-top:6px"></div><div style="font-size:12px;margin-top:5px">Submitted information is locked. Authorized supplemental documents and buyer invitations remain available.</div></div><button class="btn btn-primary" id="v120Back" type="button">← Back to Dashboard</button></div></div>
 <div class="panel">
 <span class="request-category-label">What would you like to submit?</span>
 <div class="category-grid">
@@ -2113,8 +2214,8 @@ document.querySelectorAll('.req-link').forEach(function(btn){
 </div>
 </div>
 </div>
-<div class="transaction-only" id="transactionSections">
-<div class="section" id="lenderWorksheet">
+<div class="transaction-only" id="transactionSections"><div hidden="" id="v107StatusBar"><div><strong id="v107StatusLabel">Submitted request</strong><div style="font-size:12px;color:#526b80;margin-top:4px">Original form is read-only. Authorized supplemental documents and contributor invitations remain available.</div></div><button class="btn btn-light btn-small" id="v107ReturnEdit" type="button">Return to New Request</button></div>
+<div class="section" id="v107ChangeBorrower"><div class="section-head" onclick="toggleSection('v107ChangeBorrower')"><span>3. Borrower / Ownership Change</span><span>⌃</span></div><div class="section-body"><div class="v107-info">Illustrative current borrower values are sample data. In production, prepopulate from the selected LAHD loan and verify against the record.</div><div class="section-kicker">Provide information about the existing seller and proposed buyer for Change of Ownership (Sale).</div><div class="compare"><div><h3>Current Borrower / Seller</h3><label>Legal Entity Name<input data-v107-example="true" readonly="" value="Riverview Housing LLC"/></label><label>Entity Type<input data-v107-example="true" readonly="" value="LLC"/></label><label>FEIN<input data-v107-example="true" readonly="" value="••-•••4821"/></label><label>Authorized Representative<input data-v107-example="true" readonly="" value="Maria Hernandez"/></label><label>Contact Email<input data-v107-example="true" readonly="" value="maria@example.org"/></label></div><div><h3 id="proposedTitle">Proposed Borrower / Buyer</h3><label>Legal Entity Name<input class="entry" placeholder="Enter legal entity name"/></label><label>Entity Type<select class="entry"><option value="">Select</option><option>LLC</option><option>LP</option><option>Corporation</option><option>Other</option></select></label><label>FEIN<input class="entry" placeholder="Enter securely"/></label><label>Authorized Representative<input class="entry" placeholder="Name"/></label><label>Contact Email<input class="entry" placeholder="Email" type="email"/></label></div></div><label>Describe the proposed change<textarea class="entry" placeholder="Transaction purpose and effect on LAHD obligations" rows="3"></textarea></label></div></div><div class="section" id="lenderWorksheet">
 <div class="section-head" onclick="toggleSection('lenderWorksheet')"><span>3. Borrower - Lender Worksheet</span><span>⌃</span></div>
 <div class="section-body">
 <div class="subsection-title">Loan Calculation</div>
@@ -2154,7 +2255,7 @@ document.querySelectorAll('.req-link').forEach(function(btn){
 <div class="field" style="margin-top:12px"><label>Issue / Comment</label><textarea style="min-height:105px"></textarea></div>
 </div>
 </div>
-<div class="section" id="transactionDocs">
+<div class="section" id="v107ChangeDocs"><div class="section-head" onclick="toggleSection('v107ChangeDocs')"><span>5. Document Upload</span><span>⌃</span></div><div class="section-body"><p class="helper">Upload required applicant documents before submitting. Buyer documents can be provided now or later by an invited contributor; missing buyer documents will not block submission. LAHD may request additional items during review.</p><div class="v108-summary" id="v108Summary">Required for submission: 0 of 10 received · Buyer documents: 0 of 12 received</div><h3>General Transaction Documents</h3><div class="docline" data-doc-number="1" data-requirement="required"><span>1. Signed statement on official letterhead stating why the City should consider the request; include Project/Loan number(s), circumstances, requested changes to existing loan terms, and signature.<span class="v108-requirement required">Required</span></span><input aria-label="Signed statement on official letterhead stating why the City should consider the request; include Project/Loan number(s), circumstances, requested changes to existing loan terms, and signature." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="2" data-requirement="required"><span>2. Resolution Authority &amp; Authorized Signatory(s).<span class="v108-requirement required">Required</span></span><input aria-label="Resolution Authority &amp; Authorized Signatory(s)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="3" data-requirement="required"><span>3. Organization Formation Documents and all Amendments (including organizational chart).<span class="v108-requirement required">Required</span></span><input aria-label="Organization Formation Documents and all Amendments (including organizational chart)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="4" data-requirement="required"><span>4. Certificate of Good Standing issued by the State of California (current within 6 months of application date).<span class="v108-requirement required">Required</span></span><input aria-label="Certificate of Good Standing issued by the State of California (current within 6 months of application date)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="5" data-requirement="required"><span>5. Estimated Closing Statement.<span class="v108-requirement required">Required</span></span><input aria-label="Estimated Closing Statement." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="6" data-requirement="conditional"><span>6. Purchase and Sale Agreement (for purchases only).<span class="v108-requirement conditional">If Applicable</span></span><input aria-label="Purchase and Sale Agreement (for purchases only)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="7" data-requirement="required"><span>7. Asset Management Questionnaire.<span class="v108-requirement required">Required</span></span><input aria-label="Asset Management Questionnaire." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="8" data-requirement="optional"><span>8. Other items as needed.<span class="v108-requirement optional">Optional</span></span><input aria-label="Other items as needed." data-v107-doc="true" type="file"/><small>Pending</small></div><h3>Seller / Current Borrower Documents</h3><p class="v108-note">Seller documents are required for initial submission in this demonstration.</p><div class="docline" data-doc-number="9" data-requirement="required"><span>9. Signed Certification and Authorization to Release Information (attached form).<span class="v108-requirement required">Required</span></span><input aria-label="Signed Certification and Authorization to Release Information (attached form)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="10" data-requirement="required"><span>10. Waiver of Notice to Inspect Form (attached form).<span class="v108-requirement required">Required</span></span><input aria-label="Waiver of Notice to Inspect Form (attached form)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="11" data-requirement="required"><span>11. Two months of current Mortgage Statements.<span class="v108-requirement required">Required</span></span><input aria-label="Two months of current Mortgage Statements." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="12" data-requirement="required"><span>12. Two months of current Reserve Account Statements.<span class="v108-requirement required">Required</span></span><input aria-label="Two months of current Reserve Account Statements." data-v107-doc="true" type="file"/><small>Pending</small></div><h3>Buyer / Proposed Borrower Documents</h3><p class="v108-note">Buyer documents are optional at initial submission, but may be required before LAHD completes its review. The seller can upload available files or invite the buyer to contribute.</p><div class="docline" data-doc-number="13" data-requirement="buyer"><span>13. Sponsor / Owner / Borrower signature blocks for proposed new Borrower (MS Word format).<span class="v108-requirement buyer">Buyer to Provide</span></span><input accept=".doc,.docx" aria-label="Sponsor / Owner / Borrower signature blocks for proposed new Borrower (MS Word format)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="14" data-requirement="buyer"><span>14. Property Title Report (with hyperlinks to recorded documents).<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Property Title Report (with hyperlinks to recorded documents)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="15" data-requirement="buyer"><span>15. Broker / Lender Worksheet.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Broker / Lender Worksheet." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-condition="true" data-doc-number="16" data-requirement="buyer"><span>16. IRS Form W-9 — only for new General Partner or Managing General Partner.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="IRS Form W-9 — only for new General Partner or Managing General Partner." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-condition="true" data-doc-number="17" data-requirement="buyer"><span>17. Business Tax Certificate — new Borrower only.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Business Tax Certificate — new Borrower only." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="18" data-requirement="buyer"><span>18. Project Proforma, including before- and after-term-change 15-year cash flow projections.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Project Proforma, including before- and after-term-change 15-year cash flow projections." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="19" data-requirement="buyer"><span>19. Appraisal (current within 6 months of application date).<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Appraisal (current within 6 months of application date)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="20" data-requirement="buyer"><span>20. Commitment Letter.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Commitment Letter." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-condition="true" data-doc-number="21" data-requirement="buyer"><span>21. List of Properties in LAHD Multifamily Loan Portfolio Form — new General Partner(s) only.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="List of Properties in LAHD Multifamily Loan Portfolio Form — new General Partner(s) only." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="22" data-requirement="buyer"><span>22. Resume of Multifamily Affordable Housing Experience — buyer only.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Resume of Multifamily Affordable Housing Experience — buyer only." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-condition="true" data-doc-number="23" data-requirement="buyer"><span>23. List of managed properties in LAHD portfolio — new property manager only.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="List of managed properties in LAHD portfolio — new property manager only." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="24" data-requirement="buyer"><span>24. Buyer's Self-Certification of Financial Capacity — existing and/or new Borrower.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Buyer's Self-Certification of Financial Capacity — existing and/or new Borrower." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="invitebar"><div><strong>Additional Document Contributor</strong><p id="v107InviteStatus">No invitation prepared.</p></div><button class="btn btn-primary" id="v107Invite" type="button">+ Invite Buyer / Contributor</button></div></div></div><div class="section" id="transactionDocs">
 <div class="section-head" onclick="toggleSection('transactionDocs')"><span>5. Document Upload</span><span>⌃</span></div>
 <div class="section-body">
 <div class="small" style="margin-bottom:14px">Please upload the required documents. You can download templates by clicking the links below:</div>
@@ -2356,7 +2457,7 @@ syncInvoiceTotal();
 <button class="queueTab" data-queue="reserve" type="button">Reserve Withdrawals <span class="queueCount">11</span></button>
 </div>
 <div class="queueControls"><input class="queueSearch" placeholder="Search by Request ID, project, address, or loan number..."/><select><option>All Statuses</option><option>Submitted</option><option>In Review</option><option>Awaiting Info</option><option>Approved</option></select><select><option>All Assignments</option><option>Assigned to Me</option><option>Unassigned / New</option></select><button class="queueExport" type="button">⇩ Export</button></div>
-<div class="loanQueue on" id="loanQueue"><div class="queueTableWrap"><table class="queueTable"><thead><tr><th>Request ID</th><th>Request Type</th><th>Status</th><th>Project / Property</th><th>Loan #</th><th>Requested By</th><th>Submitted On</th><th>Assigned Staff</th><th>Actions</th></tr></thead><tbody>
+<div class="loanQueue on" id="loanQueue"><div class="queueTableWrap"><table class="queueTable"><thead><tr><th>Request ID</th><th>Request Type</th><th>Status</th><th>Project / Property</th><th>Loan #</th><th>Requested By</th><th>Submitted On</th><th>Assigned Staff</th><th>Actions</th></tr></thead><tbody><tr data-ownership-row="true"><td><button class="queueLink" id="openOwnershipStaff" type="button">LT-260322</button></td><td>Change of Ownership (Sale)</td><td><span class="qStatus new">Submitted</span></td><td>Riverview Apartments</td><td>14-12345678</td><td>Maria Hernandez</td><td>10/12/2026</td><td>—</td><td>⋮</td></tr>
 <tr><td><button class="queueLink">LT-260314</button></td><td>Loan Amendment</td><td><span class="qStatus review">In Review</span></td><td>Sunshine Project</td><td>BA0450</td><td>Jane Williams</td><td>09/26/2026</td><td>Steven Brady</td><td>⋮</td></tr>
 <tr><td><button class="queueLink">LT-260309</button></td><td>Refinance / Subordination</td><td><span class="qStatus new">Submitted</span></td><td>Harbor View Apartments</td><td>23-130505-002</td><td>Mike Smith</td><td>09/25/2026</td><td>—</td><td>⋮</td></tr>
 <tr><td><button class="queueLink">LT-260301</button></td><td>Ownership / Participant Change</td><td><span class="qStatus info">Awaiting Info</span></td><td>Central Terrace</td><td>SP00122</td><td>Emily Davis</td><td>09/23/2026</td><td>Maria H.</td><td>⋮</td></tr>
@@ -2725,7 +2826,15 @@ syncInvoiceTotal();
     Invoice / estimate documents are tied to the corresponding Invoice # from the submitted Invoice / Bid Information so staff can verify each requested amount against its supporting document.
   </div>
 </section>
-<div class="footerActions"><button>Return to Borrower</button><button class="primary">Save &amp; Continue →</button></div></main></div></div></div><div class="demoSwitch"><button class="on" id="borrowerBtn">Borrower Submission</button><button id="staffBtn">Staff Review</button></div><script>(function(){const bv=document.getElementById('borrowerView'),sv=document.getElementById('staffView'),bb=document.getElementById('borrowerBtn'),sb=document.getElementById('staffBtn');function showStaff(x){bv.style.display=x?'none':'';sv.style.display=x?'block':'none';bb.classList.toggle('on',!x);sb.classList.toggle('on',x);scrollTo(0,0)}bb.onclick=()=>showStaff(false);sb.onclick=()=>showStaff(true);document.querySelectorAll('.reviewNav button[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.reviewNav button[data-p]').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.reviewPanel').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById(b.dataset.p).classList.add('on')})})();</script><script>
+<div class="footerActions"><button>Return to Borrower</button><button class="primary">Save &amp; Continue →</button></div></main></div><div id="ownershipStaffWorkspace"><div class="ow-summary"><div><small>REQUEST ID</small><strong>LT-260322</strong></div><div><small>REQUEST TYPE</small><strong>Change of Ownership (Sale)</strong></div><div><small>PROJECT NAME</small><strong>Riverview Apartments</strong></div><div><small>LOAN #</small><strong>14-12345678</strong></div><div class="ow-summary-status">● Submitted</div><button id="owBack">← Back</button></div><div class="ow-toolbar"><button class="ow-active-tab" id="owDetailsJump">Request Details</button><button id="owDocumentsJump">Documents (24)</button><button id="owActivityJump">Activity Log</button><div class="ow-action"><button class="ow-primary" id="owActionButton">☰ Action Menu ▾</button><div class="ow-menu" hidden="" id="owActionMenu"><button data-action="assign">Assign</button><button data-action="return">Return to Submitter</button><button data-action="approve">Submit for Approval</button></div></div></div>
+<div class="ow-layout"><aside class="ow-sidebar"><h3>Review Steps</h3><button data-jump="owInfo">1. Request Information</button><button data-jump="owProject">2. Project / Loan Info</button><button data-jump="owBorrowers">3. Borrower / Ownership</button><button data-jump="owDocuments">4. Submitted Documents</button><button data-jump="owReview">5. Staff Review</button></aside><div class="ow-main"><section class="ow-panel" id="owInfo"><h3>Step 1 - Request Information</h3><div class="ow-info-cards"><div class="ow-info-card"><h4>▣  Summary of the Request</h4><div class="ow-fields"><div><small>Request #</small><strong>LT-260322</strong></div><div><small>Type</small><strong>Change of Ownership (Sale)</strong></div><div><small>Submitted</small><strong>10/12/2026</strong></div><div><small>Needed By</small><strong>Not specified</strong></div><div><small>Property</small><strong>Riverview Apartments · Loan 14-12345678</strong></div></div></div><div class="ow-info-card"><h4>◎  Requester Information</h4><div class="ow-fields"><div><small>Name</small><strong>Maria Hernandez</strong></div><div><small>Role</small><strong>Authorized Representative</strong></div><div><small>Email</small><strong>maria@example.org</strong></div><div><small>On Behalf Of</small><strong>Riverview Housing LLC</strong></div></div></div></div><label>Applicant's Description<textarea readonly="">Proposed sale and transfer of borrower interest, subject to LAHD review and approval. (Illustrative submission)</textarea></label></section><section class="ow-panel" id="owProject"><h3>Step 2 - Project / Loan Information</h3><div class="ow-ahis-overview"><div><span>Project / Property:</span><strong>Riverview Apartments</strong></div><div><span>Loan #:</span><strong id="owProjectLoanNumber">14-12345678</strong></div><div><span>Borrower:</span><strong>Riverview Housing LLC</strong></div><div class="ow-ahis-address"><span>Property Address:</span><strong>1250 Riverbend Avenue, Los Angeles, CA 90017</strong></div></div><div class="ow-ahis-guidance">Staff can validate the submitted project and loan association against AHIS before continuing review.</div><div class="ow-ahis-card"><div class="ow-ahis-card-head"><div><h4>AHIS Project / Loan Association</h4><p>Search AHIS and confirm or correct the project / loan record(s) associated with this Change of Ownership request.</p></div><span class="ow-ahis-badge" id="owAhisBadge">Staff Validated</span></div>
+<div class="ow-ahis-search"><label for="owAhisQuery">FIND AHIS LOAN</label><div class="ow-ahis-searchrow"><input id="owAhisQuery" placeholder="Search by Loan # or Project Name..."/><button id="owAhisSearch" type="button">Search</button></div><div class="ow-ahis-results" hidden="" id="owAhisResults"></div></div>
+<div class="ow-ahis-bottom"><div><b>Loans Associated with this Request:</b> <span id="owAhisSelected"><span class="ow-ahis-chip">14-12345678</span></span></div><button id="owAhisSave" type="button">Save</button></div><p class="ow-ahis-audit">Changes to the request-to-loan association are recorded in the Activity Log with staff name, date/time, prior association, and new association.</p><div aria-live="polite" class="ow-ahis-feedback" id="owAhisFeedback"></div></div></section>
+<section class="ow-panel" id="owBorrowers"><h3>Step 3 - Borrower / Ownership Change</h3><div class="ow-two"><div><h4>Current Borrower / Seller</h4><div class="ow-fields"><div><small>Legal Entity Name</small><strong>Riverview Housing LLC</strong></div><div><small>Entity Type</small><strong>LLC</strong></div><div><small>FEIN</small><strong>••-•••4821</strong></div><div><small>Authorized Representative</small><strong>Maria Hernandez</strong></div><div><small>Contact Email</small><strong>maria@example.org</strong></div></div></div><div><h4>Proposed Borrower / Buyer</h4><div class="ow-fields"><div><small>Legal Entity Name</small><strong>Riverview Community Housing Partners LLC</strong></div><div><small>Entity Type</small><strong>Limited Liability Company (LLC)</strong></div><div><small>FEIN</small><strong>••-•••7392</strong></div><div><small>Authorized Representative</small><strong>Daniel Kim</strong></div><div><small>Contact Email</small><strong>daniel.kim@example.org</strong></div></div></div></div><p class="ow-muted">Sample record for design review. Future integration should populate these fields from the submitted transaction rather than hard-coded values.</p></section>
+<section class="ow-panel" id="owDocuments"><div class="ow-panel-head"><div><h3>Step 4 - Submitted Documents &amp; Staff Review</h3><p>All 24 documents from the borrower form. Buyer documents may remain outstanding at initial submission.</p></div><button class="ow-primary" id="owInvite">+ Invite Buyer / Request Documents</button></div><div class="ow-docstats"><span id="owPassed">0 Passed</span><span id="owPending">24 Pending / Awaiting</span><span id="owReturned">0 Returned / Failed</span></div><div class="ow-table-scroll"><table class="ow-table"><thead><tr><th>Document</th><th>Responsible Party</th><th>Status</th><th>Uploaded By</th><th>Uploaded On</th><th>Review Decision</th><th>Staff Comment</th></tr></thead><tbody><tr data-doc="1"><td><a class="ow-docname-link" data-preview-doc="1" href="#" title="Open document preview (sample data)">1. Signed statement on official letterhead stating why the City should consider the request; include Project/Loan number(s), circumstances, requested changes to existing loan terms, and signature.</a></td><td>General</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Seller</td><td>Oct 12, 2026</td><td><select aria-label="Review document 1" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 1" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="2"><td><a class="ow-docname-link" data-preview-doc="2" href="#" title="Open document preview (sample data)">2. Resolution Authority &amp; Authorized Signatory(s).</a></td><td>General</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Seller</td><td>Oct 12, 2026</td><td><select aria-label="Review document 2" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 2" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="3"><td><a class="ow-docname-link" data-preview-doc="3" href="#" title="Open document preview (sample data)">3. Organization Formation Documents and all Amendments (including organizational chart).</a></td><td>General</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Seller</td><td>Oct 12, 2026</td><td><select aria-label="Review document 3" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 3" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="4"><td><a class="ow-docname-link" data-preview-doc="4" href="#" title="Open document preview (sample data)">4. Certificate of Good Standing issued by the State of California (current within 6 months of application date).</a></td><td>General</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Seller</td><td>Oct 12, 2026</td><td><select aria-label="Review document 4" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 4" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="5"><td><a class="ow-docname-link" data-preview-doc="5" href="#" title="Open document preview (sample data)">5. Estimated Closing Statement.</a></td><td>General</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Seller</td><td>Oct 12, 2026</td><td><select aria-label="Review document 5" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 5" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="6"><td><a class="ow-docname-link" data-preview-doc="6" href="#" title="Open document preview (sample data)">6. Purchase and Sale Agreement (for purchases only).</a></td><td>General</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Seller</td><td>Oct 12, 2026</td><td><select aria-label="Review document 6" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 6" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="7"><td><a class="ow-docname-link" data-preview-doc="7" href="#" title="Open document preview (sample data)">7. Asset Management Questionnaire.</a></td><td>General</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Seller</td><td>Oct 12, 2026</td><td><select aria-label="Review document 7" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 7" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="8"><td>8. Other items as needed.</td><td>General</td><td><span class="ow-pill">Not Provided (Optional)</span></td><td>—</td><td>—</td><td><select aria-label="Review document 8" class="ow-review"><option>Awaiting Document</option><option>Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option selected="selected">Not Applicable</option></select></td><td><input aria-label="Comment for document 8" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="9"><td><a class="ow-docname-link" data-preview-doc="9" href="#" title="Open document preview (sample data)">9. Signed Certification and Authorization to Release Information (attached form).</a></td><td>Seller</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Seller</td><td>Oct 12, 2026</td><td><select aria-label="Review document 9" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 9" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="10"><td><a class="ow-docname-link" data-preview-doc="10" href="#" title="Open document preview (sample data)">10. Waiver of Notice to Inspect Form (attached form).</a></td><td>Seller</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Seller</td><td>Oct 12, 2026</td><td><select aria-label="Review document 10" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 10" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="11"><td><a class="ow-docname-link" data-preview-doc="11" href="#" title="Open document preview (sample data)">11. Two months of current Mortgage Statements.</a></td><td>Seller</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Seller</td><td>Oct 12, 2026</td><td><select aria-label="Review document 11" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 11" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="12"><td><a class="ow-docname-link" data-preview-doc="12" href="#" title="Open document preview (sample data)">12. Two months of current Reserve Account Statements.</a></td><td>Seller</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Seller</td><td>Oct 12, 2026</td><td><select aria-label="Review document 12" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 12" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="13"><td><a class="ow-docname-link" data-preview-doc="13" href="#" title="Open document preview (sample data)">13. Sponsor / Owner / Borrower signature blocks for proposed new Borrower (MS Word format).</a></td><td>Buyer</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Buyer</td><td>Oct 15, 2026</td><td><select aria-label="Review document 13" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 13" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="14"><td>14. Property Title Report (with hyperlinks to recorded documents).</td><td>Buyer</td><td><span class="ow-pill">Buyer Pending</span></td><td>—</td><td>—</td><td><select aria-label="Review document 14" class="ow-review"><option>Awaiting Document</option><option>Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 14" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="15"><td>15. Broker / Lender Worksheet.</td><td>Buyer</td><td><span class="ow-pill">Buyer Pending</span></td><td>—</td><td>—</td><td><select aria-label="Review document 15" class="ow-review"><option>Awaiting Document</option><option>Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 15" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="16"><td>16. IRS Form W-9 — only for new General Partner or Managing General Partner.</td><td>Buyer</td><td><span class="ow-pill">Buyer Pending</span></td><td>—</td><td>—</td><td><select aria-label="Review document 16" class="ow-review"><option>Awaiting Document</option><option>Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 16" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="17"><td><a class="ow-docname-link" data-preview-doc="17" href="#" title="Open document preview (sample data)">17. Business Tax Certificate — new Borrower only.</a></td><td>Buyer</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Buyer</td><td>Oct 15, 2026</td><td><select aria-label="Review document 17" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 17" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="18"><td>18. Project Proforma, including before- and after-term-change 15-year cash flow projections.</td><td>Buyer</td><td><span class="ow-pill">Buyer Pending</span></td><td>—</td><td>—</td><td><select aria-label="Review document 18" class="ow-review"><option>Awaiting Document</option><option>Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 18" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="19"><td>19. Appraisal (current within 6 months of application date).</td><td>Buyer</td><td><span class="ow-pill">Buyer Pending</span></td><td>—</td><td>—</td><td><select aria-label="Review document 19" class="ow-review"><option>Awaiting Document</option><option>Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 19" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="20"><td>20. Commitment Letter.</td><td>Buyer</td><td><span class="ow-pill">Buyer Pending</span></td><td>—</td><td>—</td><td><select aria-label="Review document 20" class="ow-review"><option>Awaiting Document</option><option>Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 20" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="21"><td>21. List of Properties in LAHD Multifamily Loan Portfolio Form — new General Partner(s) only.</td><td>Buyer</td><td><span class="ow-pill">Buyer Pending</span></td><td>—</td><td>—</td><td><select aria-label="Review document 21" class="ow-review"><option>Awaiting Document</option><option>Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 21" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="22"><td><a class="ow-docname-link" data-preview-doc="22" href="#" title="Open document preview (sample data)">22. Resume of Multifamily Affordable Housing Experience — buyer only.</a></td><td>Buyer</td><td><span class="ow-pill ow-received">Received</span> </td><td>Submitted by Buyer</td><td>Oct 15, 2026</td><td><select aria-label="Review document 22" class="ow-review"><option>Awaiting Document</option><option selected="selected">Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 22" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="23"><td>23. List of managed properties in LAHD portfolio — new property manager only.</td><td>Buyer</td><td><span class="ow-pill">Buyer Pending</span></td><td>—</td><td>—</td><td><select aria-label="Review document 23" class="ow-review"><option>Awaiting Document</option><option>Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 23" class="ow-comment" placeholder="Review notes"/></td></tr><tr data-doc="24"><td>24. Buyer's Self-Certification of Financial Capacity — existing and/or new Borrower.</td><td>Buyer</td><td><span class="ow-pill">Buyer Pending</span></td><td>—</td><td>—</td><td><select aria-label="Review document 24" class="ow-review"><option>Awaiting Document</option><option>Received — Not Reviewed</option><option>Pass</option><option>Fail</option><option>Return</option><option>Not Applicable</option></select></td><td><input aria-label="Comment for document 24" class="ow-comment" placeholder="Review notes"/></td></tr></tbody></table></div><button id="owSaveDocs">Save Document Reviews</button><div class="ow-inline-review" hidden="" id="owDocumentPreview"><div aria-labelledby="owPreviewTitle" aria-modal="true" class="ow-preview-dialog" role="dialog"><div class="ow-preview-head"><strong id="owPreviewTitle">Document Preview &amp; Review</strong><button aria-label="Back to document list" id="owPreviewClose" type="button">← Back to Documents</button></div><p id="owPreviewName"></p><div class="ow-review-layout"><div class="ow-preview-placeholder" style="flex:1;min-height:55vh;padding:40px;background:#edf1f5">Document preview placeholder<br/><small>Sample mock-up: no actual uploaded file is attached.</small></div><aside class="ow-review-side"><h3>Review Checklist</h3><div id="reviewDocTitle"></div><div><button data-review-choice="Pass" type="button">Pass</button> <button data-review-choice="Fail" type="button">Fail</button> <button data-review-choice="Return" type="button">Need Info</button></div><label>Comments</label><textarea id="reviewDocComment" placeholder="Review notes..."></textarea><button class="save" id="reviewDocSave" type="button">Save Review</button></aside></div><p id="owPreviewMeta"></p></div></div></section>
+<section class="ow-panel" id="owReview"><h3>Step 5 - Staff Review</h3><div class="ow-review-grid"><label>Background Check<select class="ow-edit"><option>Pending</option><option>Cleared</option><option>Issue Identified</option></select></label><label>Borrower / Entity Verification<select class="ow-edit"><option>Pending</option><option>Verified</option><option>Issue Identified</option></select></label><label>Financial Capacity Review<select class="ow-edit"><option>Pending</option><option>Satisfactory</option><option>Unsatisfactory</option></select></label><label>Loan / Regulatory Compliance<select class="ow-edit"><option>Pending</option><option>Satisfactory</option><option>Issue Identified</option></select></label><label>Staff Recommendation<select class="ow-edit"><option>Not Yet Determined</option><option>Recommend Approval</option><option>Recommend Denial</option><option>Additional Information Needed</option></select></label></div><label>Internal Review Comments<textarea class="ow-edit" id="owInternal" placeholder="Internal staff notes"></textarea></label><label>External Comments to Submitter<textarea class="ow-edit" id="owExternal" placeholder="Visible to applicant when communicated"></textarea></label><button id="owSaveReview">Save Review</button></section>
+<section class="ow-panel" id="owActivity"><h3>6. Activity Log</h3><div id="owLog"><div class="ow-log">10/12/2026 · Application submitted · System</div></div></section></div></div>
+<div class="ow-dialog-shade" hidden="" id="owDialog"><div class="ow-dialog"><h3 id="owDialogTitle">Staff Action</h3><div id="owDialogFields"></div><div class="ow-dialog-actions"><button id="owCancel">Cancel</button><button class="ow-primary" id="owConfirm">Confirm</button></div></div></div></div></div></div><div class="demoSwitch"><button class="on" id="borrowerBtn">Borrower Submission</button><button id="staffBtn">Staff Review</button></div><script>(function(){const bv=document.getElementById('borrowerView'),sv=document.getElementById('staffView'),bb=document.getElementById('borrowerBtn'),sb=document.getElementById('staffBtn');function showStaff(x){bv.style.display=x?'none':'';sv.style.display=x?'block':'none';bb.classList.toggle('on',!x);sb.classList.toggle('on',x);scrollTo(0,0)}bb.onclick=()=>showStaff(false);sb.onclick=()=>showStaff(true);document.querySelectorAll('.reviewNav button[data-p]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.reviewNav button[data-p]').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.reviewPanel').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById(b.dataset.p).classList.add('on')})})();</script><script>
 function downloadSubmittedInvoices(){
   const rows = [
     ["Invoice Date","Invoice #","Unit","Item / Work Description","Contractor / Vendor","Requested Amount","Check Paid Date"],
@@ -3685,7 +3794,7 @@ function goToRelatedRequests(){
   const shell=document.getElementById('portalShell');
 
   function returnToV32Dashboard(){
-    if(req) req.style.display='none';
+    if(req){req.classList.remove('request-open');req.style.display='none';}
     if(shell) shell.style.display='';
     window.scrollTo(0,0);
   }
@@ -3696,6 +3805,7 @@ function goToRelatedRequests(){
     const add=e.target.closest('#universalAddRequest, #basicAddRequest, [data-open-integrated-request]');
     if(add && req){
       if(shell) shell.style.display='none';
+      req.classList.add('request-open');
       req.style.display='block';
       window.scrollTo(0,0);
     }
@@ -3837,6 +3947,13 @@ function goToRelatedRequests(){
   add?.addEventListener("click",addManualRow);
   document.querySelectorAll('input[name="requestCategory"]').forEach(r=>r.addEventListener("change",render));
 
+  // Loan-level Add Request buttons open the same request workflow as the toolbar.
+  document.querySelectorAll('#dashboard .loan-card-requests-head .btn, #dashboard .old-global-requests .section-head .btn').forEach(button=>{
+    button.addEventListener('click',function(){
+      document.getElementById('universalAddRequest')?.click();
+    });
+  });
+
   // Primary / Affiliated universal Add Request: detect the active dashboard role.
   document.getElementById("universalAddRequest")?.addEventListener("click",()=>setTimeout(()=>openFor(detectRole()),0));
 
@@ -3898,7 +4015,6 @@ function openBasicDashboardFirstTime(){
   },0);
 }
 </script>
-
 <script id="v93-returning-user-script">
 function returningUserLogin(){
   const onboarding=document.getElementById('onboarding');
@@ -3913,7 +4029,7 @@ function returningUserLogin(){
 </script>
 <script id="v96-route-start">
 (function(){
-const route="home";
+const route="borrower";
 document.documentElement.setAttribute('data-v96-route',route);
 if(route==='home')return;
 const ob=document.getElementById('onboarding'),shell=document.getElementById('portalShell'),req=document.getElementById('integratedRequestView');
@@ -3931,53 +4047,319 @@ if(route==='staff'){
  if(input){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));}
 }
 })();
-</script><style>
-.borrower-request-menu{position:absolute;right:8px;top:100%;min-width:230px;background:#fff;border:1px solid #c8d5e5;border-radius:7px;box-shadow:0 8px 25px #12233c33;z-index:100;padding:5px;text-align:left}
-.borrower-request-menu button{display:block;width:100%;border:0;background:white;text-align:left;padding:10px 12px;color:#173a67;cursor:pointer;font-weight:600}.borrower-request-menu button:hover{background:#edf4fc}.request-table td.action{position:relative;overflow:visible}
-</style><script>
-function toggleBorrowerRequestMenu(e,b){e.stopPropagation();document.querySelectorAll('.borrower-request-menu').forEach(x=>x.remove());const td=b.closest('td'),tr=b.closest('tr');const menu=document.createElement('div');menu.className='borrower-request-menu';const status=tr.cells[3]?.innerText.trim()||'';const id=tr.cells[0]?.innerText.trim()||'Request';const opts=[['View',()=>showBorrowerRequestDetails(id,tr)]];if(!/completed|cancelled/i.test(status)){opts.push(['Cancel Request',()=>{if(confirm('Cancel '+id+'?')){tr.cells[3].innerHTML='<span class="pill">Cancelled</span>';alert(id+' cancelled (demo).')}}]);}else{opts.push(['Download Determination Letter',()=>{const blob=new Blob(['LAHD Determination Letter\nRequest: '+id+'\nStatus: Completed\nDemo document only'],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=id+'-determination-demo.txt';a.click();URL.revokeObjectURL(a.href)}]);}opts.forEach(([name,fn])=>{const x=document.createElement('button');x.textContent=name;x.onclick=(ev)=>{ev.stopPropagation();menu.remove();fn()};menu.appendChild(x)});td.appendChild(menu)}
-document.addEventListener('click',()=>document.querySelectorAll('.borrower-request-menu').forEach(x=>x.remove()));
+</script><script id="v103-borrower-request-actions">
+(function(){
+  'use strict';
+  const menu=document.createElement('div');
+  menu.id='borrowerRequestActionMenu';
+  menu.setAttribute('role','menu');
+  menu.innerHTML='<button type="button" data-action="view" role="menuitem">View request</button><div class="menu-separator"></div><button type="button" data-action="cancel" role="menuitem">Cancel Request</button><button type="button" data-action="letter" role="menuitem">Download Determination Letter</button>';
+  const modal=document.createElement('div');
+  modal.id='borrowerRequestViewModal';
+  modal.innerHTML='<div class="request-dialog" role="dialog" aria-modal="true" aria-labelledby="borrowerRequestTitle"><div style="display:flex;justify-content:space-between;align-items:center"><h2 id="borrowerRequestTitle" style="margin:0;font-size:20px">Request details</h2><button type="button" data-close="true" aria-label="Close" style="border:0;background:transparent;font-size:25px;cursor:pointer">×</button></div><dl id="borrowerRequestFields"></dl><div style="text-align:right"><button type="button" class="btn primary" data-close="true">Close</button></div></div>';
+  document.body.append(menu,modal);
+  let row=null,trigger=null;
+  function details(r){
+    const cells=Array.from(r.cells);
+    const text=i=>cells[i]?.textContent.trim()||'';
+    const legacy=!!r.closest('.old-global-requests');
+    return {number:text(0),type:text(1),loan:legacy?text(2):(r.closest('.loan-card-simple')?.querySelector('.loan-card-top .pair b')?.textContent.trim()||''),date:text(legacy?3:2),status:text(legacy?4:3),staff:text(legacy?5:4)};
+  }
+  function closeMenu(){menu.classList.remove('open');if(trigger)trigger.setAttribute('aria-expanded','false');row=null;trigger=null;}
+  document.addEventListener('click',function(e){
+    const btn=e.target.closest('#dashboard .request-table .dots, #dashboard .old-global-requests .req-menu');
+    if(btn){
+      e.preventDefault();e.stopPropagation();
+      if(menu.classList.contains('open')&&trigger===btn){closeMenu();return;}
+      closeMenu();trigger=btn;row=btn.closest('tr');if(!row)return;
+      const d=details(row),complete=/complete|approved|denied|closed|determined/i.test(d.status);
+      menu.querySelector('[data-action="cancel"]').disabled=complete||/cancel/i.test(d.status);
+      menu.querySelector('[data-action="letter"]').disabled=!complete;
+      menu.querySelector('[data-action="letter"]').title=complete?'Download demonstration determination letter':'Available for completed requests only';
+      menu.classList.add('open');btn.setAttribute('aria-expanded','true');btn.setAttribute('aria-haspopup','menu');
+      const rect=btn.getBoundingClientRect();const width=menu.offsetWidth,height=menu.offsetHeight;
+      menu.style.left=Math.max(8,Math.min(rect.right-width,innerWidth-width-8))+'px';
+      menu.style.top=(rect.bottom+height+8>innerHeight?Math.max(8,rect.top-height-5):rect.bottom+5)+'px';
+      return;
+    }
+    const action=e.target.closest('#borrowerRequestActionMenu [data-action]');
+    if(action&&row){
+      e.preventDefault();e.stopPropagation();const d=details(row),which=action.dataset.action;const currentRow=row;closeMenu();
+      if(which==='view'){
+        if(window.v120OpenSubmittedRequest){window.v120OpenSubmittedRequest(d);return;}
+        const fields=modal.querySelector('#borrowerRequestFields');fields.replaceChildren();
+        [['Request #',d.number],['Request Type',d.type],['Loan #',d.loan],['Requested On',d.date],['Status',d.status],['Assigned Staff',d.staff]].forEach(([k,v])=>{const dt=document.createElement('dt');dt.textContent=k;const dd=document.createElement('dd');dd.textContent=v;fields.append(dt,dd);});
+        modal.classList.add('open');
+      }else if(which==='cancel'){
+        if(confirm('Cancel request '+d.number+'? This is a demonstration and will update the displayed status only.')){
+          const legacy=!!currentRow.closest('.old-global-requests');const cell=currentRow.cells[legacy?4:3];if(cell){cell.innerHTML='<span class="pill" style="background:#f3f4f6;border-color:#d3d8df;color:#5e6875">Cancelled</span>';}
+        }
+      }else if(which==='letter'){
+        const content='LAHD Borrower Portal — DEMONSTRATION ONLY\n\nDetermination Letter (sample)\nRequest: '+d.number+'\nType: '+d.type+'\nLoan: '+d.loan+'\nStatus: '+d.status+'\n\nThis is not an official LAHD determination letter.';
+        const url=URL.createObjectURL(new Blob([content],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='DEMO_Determination_'+d.number+'.txt';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+      }
+      return;
+    }
+    if(!e.target.closest('#borrowerRequestActionMenu'))closeMenu();
+    if(e.target===modal||e.target.closest('#borrowerRequestViewModal [data-close]'))modal.classList.remove('open');
+  },true);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMenu();modal.classList.remove('open');}});
+  window.addEventListener('scroll',closeMenu,true);
+  window.addEventListener('resize',closeMenu);
+  document.querySelectorAll('#dashboard .request-table .dots, #dashboard .old-global-requests .req-menu').forEach(b=>{b.setAttribute('aria-label','Request actions');b.setAttribute('aria-haspopup','menu');b.setAttribute('aria-expanded','false');});
+})();
 </script>
-<style id="v100-borrower-request-details-style">
-.borrower-request-detail-overlay{position:fixed;inset:0;z-index:20000;background:#12243d80;display:flex;align-items:center;justify-content:center;padding:20px}
-.borrower-request-detail-card{background:white;border-radius:10px;padding:24px;width:min(540px,96vw);box-shadow:0 16px 50px #12243d55;color:#1d3554}
-.borrower-request-detail-card h2{margin:0 0 18px}.borrower-request-detail-card p{margin:12px 0}.borrower-request-detail-card button{margin-top:12px;background:#214c85;color:white;border:0;border-radius:5px;padding:10px 22px;cursor:pointer}
-</style>
-<script id="v100-borrower-request-details">
-function showBorrowerRequestDetails(id,row){
- document.querySelector('.borrower-request-detail-overlay')?.remove();
- const cells=row.cells;const overlay=document.createElement('div');overlay.className='borrower-request-detail-overlay';
- const card=document.createElement('div');card.className='borrower-request-detail-card';
- const heading=document.createElement('h2');heading.textContent='Request Details';card.appendChild(heading);
- [['Request #',id],['Type',cells[1]?.textContent],['Requested On',cells[2]?.textContent],['Status',cells[3]?.textContent],['Assigned Staff',cells[4]?.textContent]].forEach(([label,value])=>{const p=document.createElement('p');const b=document.createElement('b');b.textContent=label+': ';p.append(b,document.createTextNode(value||'—'));card.appendChild(p)});
- const close=document.createElement('button');close.textContent='Close';close.onclick=()=>overlay.remove();card.appendChild(close);overlay.appendChild(card);overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove()});document.body.appendChild(overlay);
-}
+<script id="v105-dashboard-role-entry">
+/* Select the requested dashboard role after navigation from registration. */
+(function(){
+  const role=new URLSearchParams(window.location.search).get('role');
+  if(!['tier1','tier2','basic'].includes(role))return;
+  function applyRole(){
+    const button=document.getElementById(role==='tier2'?'tier2Btn':role==='basic'?'basicUserDemo':'tier1Btn');
+    if(button)button.click();
+    const onboarding=document.getElementById('onboarding');
+    const shell=document.getElementById('portalShell');
+    if(onboarding)onboarding.classList.remove('active');
+    if(shell)shell.classList.remove('hidden-for-onboard');
+    window.scrollTo(0,0);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applyRole,{once:true});
+  else applyRole();
+})();
 </script>
-
-<style id="v101-tab-visibility-fix">
-/* Explicitly hide all review grids while another top-level tab is selected. */
-html[data-v96-route="staff"] #staffView.review-doc-mode .staffGrid,
-html[data-v96-route="staff"] #staffView.staff-activity-mode .staffGrid { display:none !important; }
-html[data-v96-route="staff"] #staffView.review-doc-mode #staffDocumentReviewWorkspace { display:block !important; }
-html[data-v96-route="staff"] #staffView.staff-activity-mode #staffActivityLogWorkspace { display:block !important; }
-html[data-v96-route="staff"] #staffView.staff-activity-mode #staffDocumentReviewWorkspace,
-html[data-v96-route="staff"] #staffView.review-doc-mode #staffActivityLogWorkspace { display:none !important; }
-</style>
-<script id="v105-registration-navigation-fix">
-/* Registration is hosted on index.html; dashboards are on borrower-portal.html. */
-function v105GoToBorrowerDashboard(role){
-  const target=new URL('borrower-portal.html', window.location.href);
-  target.searchParams.set('role', role);
-  window.location.assign(target.href);
+<div class="overlay" id="v107Overlay"><div class="dialog"><h2>Invite Document Contributor</h2><p class="muted">Restricted access to selected document uploads only.</p><label>Contributor role<select><option>Proposed Buyer</option><option>Buyer Representative</option><option>Seller Representative</option></select></label><label>Recipient name<input id="v107Person" placeholder="Full name"/></label><label>Recipient email<input id="v107Email" placeholder="name@example.com" type="email"/></label><h3>Documents requested</h3><label><input checked="" class="requested-doc" type="checkbox"/> Sponsor / Owner / Borrower signature blocks for proposed new Borrower (MS Word format).</label><label><input checked="" class="requested-doc" type="checkbox"/> Property Title Report (with hyperlinks to recorded documents).</label><label><input checked="" class="requested-doc" type="checkbox"/> Broker / Lender Worksheet.</label><label><input checked="" class="requested-doc" type="checkbox"/> IRS Form W-9 — only for new General Partner or Managing General Partner.</label><label><input checked="" class="requested-doc" type="checkbox"/> Business Tax Certificate — new Borrower only.</label><label><input checked="" class="requested-doc" type="checkbox"/> Project Proforma, including before- and after-term-change 15-year cash flow projections.</label><label><input checked="" class="requested-doc" type="checkbox"/> Appraisal (current within 6 months of application date).</label><label><input checked="" class="requested-doc" type="checkbox"/> Commitment Letter.</label><label><input checked="" class="requested-doc" type="checkbox"/> List of Properties in LAHD Multifamily Loan Portfolio Form — new General Partner(s) only.</label><label><input checked="" class="requested-doc" type="checkbox"/> Resume of Multifamily Affordable Housing Experience — buyer only.</label><label><input checked="" class="requested-doc" type="checkbox"/> List of managed properties in LAHD portfolio — new property manager only.</label><label><input checked="" class="requested-doc" type="checkbox"/> Buyer's Self-Certification of Financial Capacity — existing and/or new Borrower.</label><button class="btn btn-light" id="v107Cancel">Cancel</button><button class="btn btn-primary" id="v107Send">Send Invitation (Demo)</button></div></div><script id="v107-integration-script">
+(function(){
+'use strict';
+const own=document.getElementById('v107ChangeBorrower'),docs=document.getElementById('v107ChangeDocs');
+const lender=document.getElementById('lenderWorksheet'),standard=document.getElementById('transactionDocs');
+const checks=[...document.querySelectorAll('#multiMenu input[type="checkbox"]')];
+const sale=checks.find(x=>x.value==='Change of Ownership (Sale)');
+let submitted=false;
+function selection(){
+ const active=!!sale?.checked;
+ const selected=checks.filter(x=>x.checked);
+ const other=selected.some(x=>x!==sale);
+ own.hidden=!active;docs.hidden=!active;
+ // Preserve existing worksheet and checklist for other selected transaction types.
+ lender.hidden=active&&!other;
+ standard.hidden=active&&!other;
+ document.querySelectorAll('#v107ChangeBorrower .entry').forEach(x=>x.disabled=submitted);
+ document.querySelectorAll('#requestDetails input,#requestDetails textarea').forEach(x=>x.disabled=submitted);
+ document.querySelectorAll('#requestor input,#requestor select,#requestor textarea').forEach(x=>x.disabled=submitted);
+ document.getElementById('v107StatusBar').hidden=!submitted;
+ const submit=document.querySelector('#transactionFooter .btn-primary');
+ if(submit){submit.textContent=submitted?'Submitted — View Only':'Submit Form';submit.disabled=submitted;}
 }
-function openDashboard(tier, firstTime){
-  v105GoToBorrowerDashboard(tier==='tier2'?'tier2':'tier1');
+checks.forEach(x=>x.addEventListener('change',()=>setTimeout(selection,0)));
+document.querySelectorAll('input[name="requestCategory"]').forEach(x=>x.addEventListener('change',selection));
+selection();
+// Demo document selection statuses (not a backend upload).
+docs.querySelectorAll('.docline input[type="file"]').forEach(input=>input.addEventListener('change',()=>{
+ const st=input.parentElement.querySelector('small');if(st){st.textContent=input.files?.length?'Selected':'Pending';st.style.color=input.files?.length?'#167047':'#986619';}
+}));
+const overlay=document.getElementById('v107Overlay');
+document.getElementById('v107Invite').addEventListener('click',()=>overlay.classList.add('open'));
+document.getElementById('v107Cancel').addEventListener('click',()=>overlay.classList.remove('open'));
+overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open')});
+document.getElementById('v107Send').addEventListener('click',()=>{
+ const name=document.getElementById('v107Person').value.trim(),email=document.getElementById('v107Email').value.trim();
+ const n=overlay.querySelectorAll('.requested-doc:checked').length;
+ if(!name||!email.includes('@')||n===0){alert('Enter recipient name, valid email and select at least one document.');return;}
+ document.getElementById('v107InviteStatus').textContent='Demo invitation prepared for '+name+' ('+email+') · '+n+' documents requested. No email sent.';
+ overlay.classList.remove('open');
+});
+const submit=document.querySelector('#transactionFooter .btn-primary');
+if(submit)submit.addEventListener('click',e=>{
+ if(!sale?.checked||submitted)return;
+ // Preserve earlier validation handlers: this demo switches only after the association check.
+ const hasLoan=[...document.querySelectorAll('input[name="v82AssociatedLoan"]:checked')].length>0 ||
+  [...document.querySelectorAll('.v82-manual-row')].some(r=>r.querySelector('.v82-m-loan')?.value.trim()&&r.querySelector('.v82-m-project')?.value.trim()&&r.querySelector('.v82-m-address')?.value.trim());
+ if(!hasLoan)return;
+ e.preventDefault();submitted=true;
+ document.getElementById('v107StatusLabel').textContent='Submitted — Change of Ownership (Sale)';
+ selection();document.getElementById('v107StatusBar').scrollIntoView({behavior:'smooth',block:'start'});
+},false);
+document.getElementById('v107ReturnEdit').addEventListener('click',()=>{submitted=false;selection();});
+// Expose controlled demo open for future dashboard request-detail integration.
+window.v107OpenSubmittedOwnershipRequest=function(){
+ const category=document.querySelector('input[name="requestCategory"][value="transaction"]');
+ if(category){category.checked=true;category.dispatchEvent(new Event('change',{bubbles:true}));}
+ if(sale&&!sale.checked){sale.checked=true;sale.dispatchEvent(new Event('change',{bubbles:true}));}
+ const req=document.getElementById('integratedRequestView');
+ if(req){req.style.display='block';}
+ const shell=document.getElementById('portalShell');if(shell) shell.style.display='none';
+ submitted=true;selection();window.scrollTo(0,0);
+};
+})();
+</script><script>
+(function(){
+ const root=document.getElementById('v107ChangeDocs');if(!root)return;
+ const rows=[...root.querySelectorAll('.docline[data-doc-number]')];
+ const required=rows.filter(r=>r.dataset.requirement==='required'),buyers=rows.filter(r=>r.dataset.requirement==='buyer');
+ const hasFile=r=>!!r.querySelector('input[type=file]')?.files?.length;
+ function update(){
+  const nr=required.filter(hasFile).length,nb=buyers.filter(hasFile).length;
+  document.getElementById('v108Summary').textContent='Required for submission: '+nr+' of '+required.length+' received · Buyer documents: '+nb+' of '+buyers.length+' received (nonblocking)';
+  rows.forEach(r=>{const status=r.querySelector('small');if(!status)return;status.textContent=hasFile(r)?'Selected':r.dataset.requirement==='buyer'?'Awaiting Buyer':r.dataset.requirement==='required'?'Missing':'Pending';});
+ }
+ root.querySelectorAll('input[type=file]').forEach(i=>i.addEventListener('change',update));update();
+ // Validation for the ownership-specific demo; existing loan association validation remains unchanged.
+ const submit=document.querySelector('#transactionFooter .btn-primary');
+ if(submit)submit.addEventListener('click',e=>{
+  const sale=[...document.querySelectorAll('#multiMenu input[type=checkbox]')].find(x=>x.value==='Change of Ownership (Sale)');
+  if(!sale?.checked||submit.disabled)return;
+  const missing=required.filter(r=>!hasFile(r));
+  if(missing.length){e.preventDefault();e.stopImmediatePropagation();required.forEach(r=>r.classList.toggle('v108-missing',!hasFile(r)));alert('Please upload the '+missing.length+' required applicant/seller document(s) before submitting. Buyer documents may be provided later and do not block submission.');root.classList.remove('collapsed');root.scrollIntoView({behavior:'smooth',block:'start'});}
+ },true);
+})();
+</script><script id="owBuyerDocsData" type="application/json">["13. Sponsor / Owner / Borrower signature blocks for proposed new Borrower (MS Word format). Buyer to Provide", "14. Property Title Report (with hyperlinks to recorded documents). Buyer to Provide", "15. Broker / Lender Worksheet. Buyer to Provide", "16. IRS Form W-9 \u2014 only for new General Partner or Managing General Partner. Buyer to Provide", "17. Business Tax Certificate \u2014 new Borrower only. Buyer to Provide", "18. Project Proforma, including before- and after-term-change 15-year cash flow projections. Buyer to Provide", "19. Appraisal (current within 6 months of application date). Buyer to Provide", "20. Commitment Letter. Buyer to Provide", "21. List of Properties in LAHD Multifamily Loan Portfolio Form \u2014 new General Partner(s) only. Buyer to Provide", "22. Resume of Multifamily Affordable Housing Experience \u2014 buyer only. Buyer to Provide", "23. List of managed properties in LAHD portfolio \u2014 new property manager only. Buyer to Provide", "24. Buyer's Self-Certification of Financial Capacity \u2014 existing and/or new Borrower. Buyer to Provide"]</script><script>
+(function(){
+const wrap=document.getElementById('staffWrap'),work=document.getElementById('ownershipStaffWorkspace');if(!wrap||!work)return;
+const log=(msg)=>{const e=document.createElement('div');e.className='ow-log';e.textContent=new Date().toLocaleString()+' · '+msg+' · Staff (demo)';document.getElementById('owLog').prepend(e)};
+function open(){wrap.classList.remove('queueMode');wrap.classList.add('ow-mode');document.getElementById('staffView').classList.remove('queue-mode');window.scrollTo(0,0)}
+function back(){wrap.classList.remove('ow-mode');wrap.classList.add('queueMode');document.getElementById('staffView').classList.add('queue-mode');document.querySelector('[data-queue="loan"]')?.click();window.scrollTo(0,0)}
+// Capture clicks before the existing reserve-workspace queue handler can open the wrong page.
+document.addEventListener('click',function(e){const link=e.target.closest('#openOwnershipStaff');if(link){e.preventDefault();e.stopImmediatePropagation();open()}},true);
+document.getElementById('owBack').onclick=back;
+work.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.jump).scrollIntoView({behavior:'smooth'}));
+document.getElementById('owDocumentsJump').onclick=()=>document.getElementById('owDocuments').scrollIntoView({behavior:'smooth'});
+document.getElementById('owActivityJump').onclick=()=>document.getElementById('owActivity').scrollIntoView({behavior:'smooth'});
+const menu=document.getElementById('owActionMenu');document.getElementById('owActionButton').onclick=()=>menu.hidden=!menu.hidden;
+let action='';const dialog=document.getElementById('owDialog'),fields=document.getElementById('owDialogFields');
+function modal(type){action=type;menu.hidden=true;dialog.hidden=false;document.getElementById('owDialogTitle').textContent=({assign:'Assign Request',return:'Return to Submitter',approve:'Submit Change of Ownership for Approval',invite:'Invite Buyer / Request Documents'})[type];
+fields.innerHTML=type==='assign'?'<label>Assign To *</label><select id="owAssignTo"><option value="">Select staff...</option><option>Tan B</option><option>Maria H.</option><option>Steven Brady</option><option>Michael A.</option></select><label>Internal Comment</label><textarea id="owActionComment"></textarea>':type==='return'?'<label>External Comment * (visible to submitter)</label><textarea id="owActionComment" placeholder="Describe missing information or corrections"></textarea>':type==='approve'?'<p>Submit analyst recommendation for supervisor review. This does not constitute final approval.</p><label>Recommendation *</label><select id="owRecommendation"><option value="">Select...</option><option>Recommend Approval</option><option>Recommend Denial</option></select><label>Internal Comment</label><textarea id="owActionComment"></textarea>':'<label>Recipient Name *</label><input id="owRecipient" placeholder="Buyer name"><label>Recipient Email *</label><input id="owEmail" type="email" placeholder="buyer@example.com"><label>Requested Documents</label><div style="max-height:160px;overflow:auto">'+JSON.parse(document.getElementById('owBuyerDocsData').textContent).map((d,i)=>'<label><input type="checkbox" class="ow-ask" checked style="width:auto"> '+d.replaceAll('<','&lt;')+'</label>').join('')+'</div><label>Message</label><textarea id="owActionComment"></textarea>';
 }
-function openBasicDashboardFirstTime(){
-  v105GoToBorrowerDashboard('basic');
+work.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>modal(b.dataset.action));document.getElementById('owInvite').onclick=()=>modal('invite');document.getElementById('owCancel').onclick=()=>dialog.hidden=true;
+document.getElementById('owConfirm').onclick=()=>{const note=document.getElementById('owActionComment')?.value.trim()||'';
+if(action==='assign'){const name=document.getElementById('owAssignTo').value;if(!name)return alert('Select a staff member.');document.getElementById('owAssignee').textContent=name;log('Assigned to '+name)}
+if(action==='return'){if(!note)return alert('External comment is required.');document.getElementById('owStatus').textContent='Awaiting Info';log('Returned to submitter: '+note)}
+if(action==='approve'){const rec=document.getElementById('owRecommendation').value;if(!rec)return alert('Choose a recommendation.');document.getElementById('owStatus').textContent='Pending Supervisor Approval';log('Submitted for supervisor approval: '+rec+(note?' — '+note:''))}
+if(action==='invite'){const n=document.getElementById('owRecipient').value.trim(),email=document.getElementById('owEmail').value.trim(),count=work.querySelectorAll('.ow-ask:checked').length;if(!n||!email.includes('@')||!count)return alert('Enter recipient, valid email, and select documents.');log('Invitation prepared for '+n+' ('+email+') requesting '+count+' buyer document(s). No email sent.')}
+dialog.hidden=true};
+function counts(){let passed=0,pending=0,returned=0;work.querySelectorAll('.ow-review').forEach(s=>{if(s.value==='Pass')passed++;else if(s.value==='Fail'||s.value==='Return')returned++;else pending++});document.getElementById('owPassed').textContent=passed+' Passed';document.getElementById('owPending').textContent=pending+' Pending / Awaiting';document.getElementById('owReturned').textContent=returned+' Returned / Failed'}work.querySelectorAll('.ow-review').forEach(s=>s.addEventListener('change',counts));
+counts();document.getElementById('owSaveDocs').onclick=()=>{counts();log('Document review decisions saved (demo session)')};document.getElementById('owSaveReview').onclick=()=>log('Staff review saved (demo session)');
+})();
+</script><script>
+(function(){
+ const w=document.getElementById('ownershipStaffWorkspace');if(!w)return;
+ const detailIds=['owInfo','owProject','owBorrowers','owDocuments','owReview'];
+ const allIds=[...detailIds,'owActivity'];
+ const tabs={owDetailsJump:'owInfo',owDocumentsJump:'owDocuments',owActivityJump:'owActivity'};
+ function show(id){
+  allIds.forEach(x=>{const el=document.getElementById(x);if(el)el.style.display=x===id?'':'none'});
+  w.querySelectorAll('.ow-sidebar button[data-jump]').forEach(b=>b.classList.toggle('ow-selected-step',b.dataset.jump===id));
+  Object.entries(tabs).forEach(([b,target])=>{const el=document.getElementById(b);if(el)el.classList.toggle('ow-active-tab',target===id || (b==='owDetailsJump' && detailIds.includes(id) && id!=='owDocuments'))});
+  w.querySelector('.ow-layout').scrollIntoView({block:'nearest'});
+ }
+ w.querySelectorAll('.ow-sidebar button[data-jump]').forEach(b=>b.onclick=()=>show(b.dataset.jump));
+ Object.entries(tabs).forEach(([b,id])=>{const el=document.getElementById(b);if(el)el.onclick=()=>show(id)});
+ show('owInfo');
+})();
+</script><script>(function(){
+const root=document.getElementById('ownershipStaffWorkspace');if(!root)return;
+const catalog=[{loan:'14-12345678',project:'Riverview Apartments',borrower:'Riverview Housing LLC'},{loan:'14-12345679',project:'Riverview Apartments',borrower:'Riverview Housing LLC'},{loan:'23-130489-001',project:'Peak Plaza Apartments',borrower:'Peak Plaza LLC'}];
+let saved=['14-12345678'],selected=[...saved];
+const $=id=>document.getElementById(id);
+function render(){const box=$('owAhisSelected');box.innerHTML='';selected.forEach(loan=>{const chip=document.createElement('span');chip.className='ow-ahis-chip';chip.append(document.createTextNode(loan));const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.title='Remove associated loan';remove.onclick=()=>{selected=selected.filter(x=>x!==loan);render()};chip.append(remove);box.append(chip)});if(!selected.length)box.textContent='No loans selected';const changed=JSON.stringify(selected)!==JSON.stringify(saved);$('owAhisBadge').textContent=changed?'Unsaved Changes':'Staff Validated';$('owAhisBadge').classList.toggle('unsaved',changed)}
+function search(){const q=$('owAhisQuery').value.trim().toLowerCase(),results=$('owAhisResults');results.hidden=false;results.innerHTML='';const matches=q?catalog.filter(x=>(x.loan+' '+x.project+' '+x.borrower).toLowerCase().includes(q)):catalog;matches.forEach(x=>{const row=document.createElement('div');row.className='ow-ahis-result';const info=document.createElement('span');info.textContent=x.loan+' — '+x.project;const btn=document.createElement('button');btn.type='button';btn.textContent=selected.includes(x.loan)?'Associated':'Add Loan';btn.disabled=selected.includes(x.loan);btn.onclick=()=>{if(!selected.includes(x.loan))selected.push(x.loan);render();search()};row.append(info,btn);results.append(row)});if(!matches.length)results.textContent='No matching demo AHIS loan records.'}
+$('owAhisSearch').addEventListener('click',search);$('owAhisQuery').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();search()}});
+$('owAhisSave').addEventListener('click',()=>{if(!selected.length){$('owAhisFeedback').textContent='Associate at least one loan before saving.';return}const before=[...saved];saved=[...selected];render();$('owAhisFeedback').textContent='Project / loan association saved (mock-up).';if(JSON.stringify(before)!==JSON.stringify(saved)){const log=$('owLog');if(log){const entry=document.createElement('div');entry.className='ow-log';entry.textContent=new Date().toLocaleString()+' · Staff (demo) updated AHIS loan association: '+before.join(', ')+' → '+saved.join(', ');log.prepend(entry)}const summary=root.querySelector('.ow-summary strong');const loanStrong=root.querySelector('.ow-summary > div:nth-child(4) strong');if(loanStrong)loanStrong.textContent=saved.join(', ');$('owProjectLoanNumber').textContent=saved.join(', ')}});
+render();
+})();</script><script>(function(){
+const root=document.getElementById('ownershipStaffWorkspace'),section=document.getElementById('owDocuments'),modal=document.getElementById('owDocumentPreview');if(!root||!modal)return;
+let row=null,choice='';
+function paint(){modal.querySelectorAll('[data-review-choice]').forEach(b=>b.classList.toggle('active',b.dataset.reviewChoice===choice));}
+function close(){modal.hidden=true;modal.style.display='none';section.classList.remove('ow-show-review');row=null;}
+root.addEventListener('click',function(e){const a=e.target.closest('a[data-preview-doc]');if(!a)return;e.preventDefault();e.stopPropagation();row=a.closest('tr');const select=row.querySelector('.ow-review');choice=['Pass','Fail','Return'].includes(select.value)?select.value:'';document.getElementById('owPreviewName').textContent=a.textContent;document.getElementById('reviewDocTitle').textContent=a.textContent;document.getElementById('owPreviewMeta').textContent='Uploaded by: '+row.cells[3].textContent+' · Uploaded on: '+row.cells[4].textContent;document.getElementById('reviewDocComment').value=row.querySelector('.ow-comment').value;paint();modal.hidden=false;modal.style.display='block';section.classList.add('ow-show-review');modal.scrollIntoView({block:'start'});});
+modal.querySelectorAll('[data-review-choice]').forEach(b=>b.addEventListener('click',function(){choice=b.dataset.reviewChoice;paint()}));
+document.getElementById('reviewDocSave').addEventListener('click',function(){if(!row)return;const sel=row.querySelector('.ow-review');if(choice){sel.value=choice;sel.dispatchEvent(new Event('change',{bubbles:true}));}row.querySelector('.ow-comment').value=document.getElementById('reviewDocComment').value;close();});
+document.getElementById('owPreviewClose').addEventListener('click',close);modal.addEventListener('click',e=>{if(e.target===modal)close()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.hidden)close()});
+})();</script><div id="v120Preview"><div class="v120-paper"><div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Uploaded Document</h2><button class="btn" id="v120ClosePreview" type="button">Close ✕</button></div><p id="v120DocName"></p><div style="background:#f1f4f8;border:1px solid #dae1ea;padding:55px 20px;text-align:center;border-radius:7px">Document preview placeholder<br/><small>Demo only — no original uploaded file is attached.</small></div></div></div><script id="v120-submitted-borrower-form">(function(){
+'use strict';
+const req=document.getElementById('integratedRequestView'),shell=document.getElementById('portalShell'),banner=document.getElementById('v120ReadOnlyBanner');
+if(!req||!shell||!banner)return;
+let saved=[];
+const docs=[...document.querySelectorAll('#v107ChangeDocs .docline[data-doc-number]')];
+const received=new Set([1,2,3,4,5,6,7,9,10,11,12,13,17,22]);
+function setField(label,value){
+ const area=document.getElementById('v107ChangeBorrower');if(!area)return;
+ const labels=[...area.querySelectorAll('label')];
+ const match=labels.find(x=>x.textContent.trim().toLowerCase().includes(label.toLowerCase()));
+ if(match){const input=match.querySelector('input,select,textarea')||match.parentElement.querySelector('input,select,textarea');if(input){if(input.tagName==='SELECT'){const opt=[...input.options].find(o=>o.value===value||o.textContent.trim()===value);if(opt)input.value=opt.value;}else input.value=value;}}
 }
-function returningUserLogin(){
-  v105GoToBorrowerDashboard('tier1');
+function fillSample(){
+ const area=document.getElementById('v107ChangeBorrower');if(!area)return;
+ const inputs=[...area.querySelectorAll('input:not([type=file]),textarea')];
+ const values=['Arlington Square Housing LP','Limited Partnership','95-1234567','Maria Hernandez','maria.hernandez@example.org','Riverview Community Housing Partners LLC','Limited Liability Company (LLC)','92-4567392','Daniel Kim','daniel.kim@example.org'];
+ inputs.slice(0,10).forEach((el,i)=>{if(!el.value)el.value=values[i]});
+ const description=document.querySelector('#requestDetails textarea');if(description&&!description.value)description.value='Requesting LAHD consent to the proposed sale and transfer of ownership to Riverview Community Housing Partners LLC. Existing City loan obligations will remain subject to LAHD review and approval.';
 }
-</script>
-</body></html>
+function back(){
+ req.classList.remove('request-open','v120-readonly');req.style.display='none';shell.style.display='';banner.style.display='none';
+ saved.forEach(([el,disabled,readOnly])=>{el.disabled=disabled;el.readOnly=readOnly});saved=[];
+ document.querySelectorAll('.v120-view').forEach(x=>x.remove());docs.forEach(x=>{delete x.dataset.v120Received;const st=x.querySelector('small');if(st&&st.dataset.v120Old!==undefined){st.textContent=st.dataset.v120Old;delete st.dataset.v120Old}});
+ window.scrollTo(0,0);
+}
+window.v120OpenSubmittedRequest=function(d){
+ const category=document.querySelector('input[name="requestCategory"][value="transaction"]');if(category){category.checked=true;category.dispatchEvent(new Event('change',{bubbles:true}))}
+ const sale=[...document.querySelectorAll('#multiMenu input[type="checkbox"]')].find(x=>x.value==='Change of Ownership (Sale)');
+ if(sale&&!sale.checked){sale.checked=true;sale.dispatchEvent(new Event('change',{bubbles:true}))}
+ fillSample();
+ saved=[...req.querySelectorAll('input:not([type=file]),select,textarea')].map(el=>[el,el.disabled,el.readOnly]);
+ saved.forEach(([el])=>{el.disabled=true;el.readOnly=true});
+ docs.forEach(row=>{const n=Number(row.dataset.docNumber),status=row.querySelector('small');if(received.has(n)){row.dataset.v120Received='true';if(status){status.dataset.v120Old=status.textContent;status.textContent='Received';}const b=document.createElement('button');b.type='button';b.className='v120-view';b.textContent='View document';b.onclick=()=>{document.getElementById('v120DocName').textContent=row.querySelector('span')?.textContent||'Document';document.getElementById('v120Preview').classList.add('open')};row.append(b)}else if(status){status.dataset.v120Old=status.textContent;status.textContent=n>=13?'Buyer Pending':'Not Provided'}});
+ const label=document.getElementById('v107StatusLabel');if(label)label.textContent='Submitted — Change of Ownership (Sale)';
+ document.getElementById('v120RequestMeta').textContent='Request '+(d.number||'REQ-2026-00418')+' · Change of Ownership (Sale) · '+(d.date||'Oct 12, 2026')+' · '+(d.status||'Under Review');
+ req.classList.add('request-open','v120-readonly');req.style.display='block';shell.style.display='none';banner.style.display='block';
+ document.querySelectorAll('#v107ChangeBorrower,#v107ChangeDocs,#requestDetails,#requestor').forEach(el=>{if(el){el.hidden=false;el.classList.remove('collapsed');el.querySelector('.section-body')?.style.removeProperty('display')}});
+ window.scrollTo(0,0);
+};
+ document.getElementById('v120Back').onclick=back;
+ document.getElementById('v120ClosePreview').onclick=()=>document.getElementById('v120Preview').classList.remove('open');
+ document.getElementById('v120Preview').addEventListener('click',e=>{if(e.target.id==='v120Preview')e.target.classList.remove('open')});
+ document.addEventListener('click',e=>{
+  if(req.classList.contains('v120-readonly')&&e.target.closest('#integratedRequestView .topbar button')){e.preventDefault();e.stopImmediatePropagation();back();return}
+  if(req.classList.contains('v120-readonly')&&e.target.closest('#v107ReturnEdit,#transactionFooter button')){e.preventDefault();e.stopImmediatePropagation();}
+ },true);
+ // Allow request numbers to open the same read-only application, including Basic user dashboards.
+ document.addEventListener('click',e=>{
+  const cell=e.target.closest('#dashboard .request-table tbody td:first-child,#dashboard .old-global-requests tbody td:first-child');
+  if(!cell||e.target.closest('button'))return;
+  const row=cell.closest('tr'),cells=[...row.cells],legacy=!!row.closest('.old-global-requests');
+  e.preventDefault();window.v120OpenSubmittedRequest({number:cell.textContent.trim(),type:cells[1]?.textContent.trim(),date:cells[legacy?3:2]?.textContent.trim(),status:cells[legacy?4:3]?.textContent.trim()});
+ },true);
+})();</script><script>
+/* GitHub Pages multipage navigation: preserve original mock-up logic */
+(function(){
+const PAGE="index";
+function go(file,id){location.href=file+(id?'?requestId='+encodeURIComponent(id):'')}
+document.addEventListener('click',function(e){
+ const a=e.target.closest('a[href]');
+ if(a && /^(staff-dashboard|lp-transaction-detail|reserve-withdrawal-detail|index)\.html/.test(a.getAttribute('href')||''))return;
+ const q=e.target.closest('#loanQueue .queueLink,#reserveQueue .queueLink');
+ if(q && PAGE==='staff-dashboard'){
+  e.preventDefault();e.stopImmediatePropagation();
+  const id=q.textContent.trim();go(q.closest('#loanQueue')?'lp-transaction-detail.html':'reserve-withdrawal-detail.html',id);return;
+ }
+ const back=e.target.closest('#owBack,.staffBanner strong');
+ if(back && PAGE!=='staff-dashboard' && (back.id==='owBack'||back.textContent.includes('Back'))){e.preventDefault();e.stopImmediatePropagation();go('staff-dashboard.html');return}
+},true);
+function start(){
+ if(PAGE==='index')return;
+ const staff=document.getElementById('staffBtn');if(staff)staff.click();
+ if(PAGE==='staff-dashboard'){
+  const wrap=document.getElementById('staffWrap');if(wrap){wrap.classList.add('queueMode');wrap.classList.remove('ow-mode')}
+  const view=document.getElementById('staffView');if(view)view.classList.add('queue-mode');
+ } else if(PAGE==='lp-transaction-detail'){
+  const btn=document.getElementById('openOwnershipStaff');if(btn)btn.click();
+  else {const wrap=document.getElementById('staffWrap');if(wrap){wrap.classList.add('ow-mode');wrap.classList.remove('queueMode')}document.getElementById('staffView')?.classList.remove('queue-mode')}
+ } else if(PAGE==='reserve-withdrawal-detail'){
+  const tab=document.querySelector('[data-queue="reserve"]');if(tab)tab.click();
+  const btn=document.getElementById('openCurrentReserve');if(btn)btn.click();
+  document.getElementById('staffView')?.classList.remove('queue-mode');
+ }
+ window.scrollTo(0,0);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(start,0));else setTimeout(start,0);
+})();
+</script></body></html>
