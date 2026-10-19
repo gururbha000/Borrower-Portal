@@ -4403,4 +4403,23 @@ html[data-v96-route="staff"] #staffWrap .staffQueue {display:block!important}
  window.addEventListener('pageshow',openStaffQueue);
 })();
 </script>
+<script id="v127-external-request-navigation">
+/* Route staff queue requests to standalone GitHub Pages before legacy inline handlers run.
+   A window capture listener precedes document capture listeners without altering them. */
+(function(){
+  if (location.pathname.split('/').pop() !== 'staff-dashboard.html') return;
+  window.addEventListener('click', function(event){
+    var target = event.target;
+    if (!target || !target.closest) return;
+    var link = target.closest('#loanQueue .queueLink, #reserveQueue .queueLink');
+    if (!link) return;
+    var id = (link.textContent || '').trim();
+    if (!id) return;
+    var page = link.closest('#loanQueue') ? 'lp-transaction-detail.html' : 'reserve-withdrawal-detail.html';
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    window.location.assign(page + '?requestId=' + encodeURIComponent(id));
+  }, true);
+})();
+</script>
 </body></html>
