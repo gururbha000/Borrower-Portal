@@ -1517,7 +1517,7 @@ html[data-v96-route="reserve"] .demoSwitch {display:none!important}
 #v136Dialog .v136-note{color:#64798d;font-size:12px;margin-top:10px}#v136Dialog .v136-close{cursor:pointer;border:1px solid #b6c8da;border-radius:5px;background:white;padding:7px 13px}
 @media(max-width:650px){#v136Dialog .v136-meta{grid-template-columns:1fr}#v136Dialog .v136-body{overflow:auto}}
 </style></head>
-<body><nav class="v96-nav"><a href="index.html">Sign In</a><a href="borrower-portal.html">Borrower Dashboard</a><a href="staff-dashboard.html">Staff Dashboard</a><a href="loan-portfolio-transactions.html">Transactions</a><a href="reserve-withdrawal.html">Reserve Withdrawal</a></nav>
+<body><nav class="v96-nav"><a href="index.html">Sign In</a><a href="borrower-portal.html">Borrower Dashboard</a><a href="staff-dashboard.html">Staff Dashboard</a><a href="loan-portfolio-transaction-form.html">Transactions</a><a href="reserve-withdrawal-form.html">Reserve Withdrawal</a></nav>
 <div class="onboard-shell active" id="onboarding">
 <header class="top"><div class="brand"><div class="logo"></div><div><h1>Borrower Portal</h1><p>Los Angeles Housing Department</p></div></div><div class="profile"><div><b>Riverview Housing LLC</b><span id="profileRole">Maria Hernandez · Primary User</span></div><div class="avatar" id="avatar">MH</div></div></header>
 <div class="citybar">◉ An Official Website of the City of Los Angeles</div>
@@ -4046,4 +4046,14 @@ if(route==='staff'){
   else applyRole();
 })();
 </script>
-</body></html>
+<script id="v139-standalone-form-navigation">
+(function(){
+  function openPage(e){
+    const t=e.target.closest('#universalAddRequest,#basicSubmitRequest,#basicAddRequest,[data-open-integrated-request]');
+    if(!t)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    location.href='loan-portfolio-transaction-form.html';
+  }
+  document.addEventListener('click',openPage,true);
+})();
+</script></body></html>
