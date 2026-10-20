@@ -1489,6 +1489,29 @@ html[data-v96-route="transaction"] .demoSwitch,
 html[data-v96-route="reserve"] .demoSwitch {display:none!important}
 .v96-nav{position:relative;z-index:9999;background:#173a60;padding:11px 16px;display:flex;gap:17px;flex-wrap:wrap;font:12px Arial}
 .v96-nav a{color:white;text-decoration:none}.v96-nav a:hover{text-decoration:underline}
+</style><style id="v107-style">
+/* v107: scoped ownership transaction additions; leave v106 styles intact */
+#v107ChangeBorrower .section-body label{display:block;font-size:12px;font-weight:bold;margin:9px 0;color:#44596e}
+#v107ChangeBorrower .section-body label input,#v107ChangeBorrower .section-body label select,#v107ChangeBorrower .section-body label textarea{display:block;width:100%;box-sizing:border-box;padding:10px;border:1px solid #c8d5e0;border-radius:4px;margin-top:6px;font:inherit}
+#v107ChangeBorrower .section-body input[readonly]{background:#f2f5f8}
+#v107ChangeBorrower .compare{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+#v107ChangeBorrower .compare>div{border:1px solid #dce4ed;border-radius:6px;padding:15px}
+#v107ChangeBorrower .section-body h3,#v107ChangeDocs .section-body h3{font-size:15px;margin:16px 0 10px}
+#v107ChangeDocs .docline{display:grid;grid-template-columns:minmax(0,1fr) 220px 75px;align-items:center;gap:10px;padding:12px;border-bottom:1px solid #e2e8ef}
+#v107ChangeDocs .docline input{max-width:220px}
+#v107ChangeDocs .docline small{color:#986619}
+#v107ChangeDocs .invitebar{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:16px;background:#f3f8fc;margin-top:16px;border-radius:6px}
+#v107ChangeDocs .invitebar p{font-size:12px;color:#65768a}
+#v107Overlay{position:fixed;inset:0;background:#102d49aa;display:none;align-items:center;justify-content:center;z-index:9999}
+#v107Overlay.open{display:flex}
+#v107Overlay .dialog{width:min(580px,94vw);max-height:88vh;overflow-y:auto;background:white;border-radius:9px;padding:22px}
+#v107Overlay .dialog label{display:block;margin:12px 0;font-size:13px}
+#v107Overlay .dialog input:not([type=checkbox]),#v107Overlay .dialog select{display:block;width:100%;padding:9px;box-sizing:border-box;margin-top:4px}
+#v107Overlay .dialog button{margin:8px}
+#v107ChangeBorrower .v107-info{padding:11px 13px;border:1px solid #c7ddec;background:#f0f7fc;border-radius:5px;margin-bottom:14px;color:#34566f}
+#v107StatusBar{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;background:#eef6fc;border:1px solid #c5ddec;padding:13px 16px;border-radius:6px;margin:10px 0}
+#v107StatusBar[hidden],#v107ChangeBorrower[hidden],#v107ChangeDocs[hidden]{display:none!important}
+@media(max-width:700px){#v107ChangeBorrower .compare,#v107ChangeBorrower .grid3{grid-template-columns:1fr}#v107ChangeDocs .docline{grid-template-columns:1fr}#v107ChangeDocs .invitebar{flex-direction:column;align-items:flex-start}}
 </style></head>
 <body><nav class="v96-nav"><a href="index.html">Sign In</a><a href="borrower-portal.html">Borrower Dashboard</a><a href="staff-dashboard.html">Staff Dashboard</a><a href="loan-portfolio-transaction-form.html">Transactions</a><a href="reserve-withdrawal-form.html">Reserve Withdrawal</a></nav>
 <div class="onboard-shell active" id="onboarding">
@@ -1505,19 +1528,19 @@ html[data-v96-route="reserve"] .demoSwitch {display:none!important}
 <div class="onboard-wrap">
 <section class="obpage" id="portalEntry" style="display:none"><div class="ob-card"><h1>LAHD Borrower Portal</h1><div class="info-callout"><b>Angeleno Account Required</b><br/>LAHD services use the City of Los Angeles unified authentication system. Actual Angeleno sign-in/account creation is outside this mock-up.</div><h2>Continue to Borrower Portal</h2><p>After Angeleno authentication, the portal determines whether you are a primary user or an affiliated user based on LAHD records.</p><div class="flow-choice"><button class="ob-btn primary" onclick="startFlow('tier1')">Demo: Sign in as Tier 1</button><button class="ob-btn" onclick="startFlow('tier2')">Demo: Sign in as Tier 2</button><button class="ob-btn" onclick="startBasicFirstTime()">Demo: Sign in as Basic User</button></div>
 <div class="v93-returning-wrap">
-  <div class="v93-or"><span>OR</span></div>
-  <button type="button" class="v93-returning-btn" onclick="returningUserLogin()">Returning User — Go to Dashboard</button>
-  <div class="v93-returning-help">For users who have already completed first-time portal setup.</div>
+<div class="v93-or"><span>OR</span></div>
+<button class="v93-returning-btn" onclick="returningUserLogin()" type="button">Returning User — Go to Dashboard</button>
+<div class="v93-returning-help">For users who have already completed first-time portal setup.</div>
 </div></div></section>
 <div class="stepper" id="steps" style="display:none"><div class="stepnode">Angeleno Sign-In</div><div class="stepnode">Basic Profile</div><div class="stepnode">Verify Access</div><div class="stepnode">Dashboard</div></div>
 <section class="obpage" id="basicprofile" style="display:none"><div class="ob-card">
 <span class="rolebadge">BASIC USER</span><h1 style="margin-top:12px">Complete Your Basic Profile</h1>
 <p>Enter your basic contact information to continue to the Borrower Portal.</p>
-<div class="ob-grid"><div class="ob-field"><label>Full Name</label><input value="John Doe"></div>
-<div class="ob-field"><label>Email</label><input readonly value="john.doe@yopmail.com"></div>
-<div class="ob-field"><label>Phone</label><input placeholder="(213) 555-0000"></div>
-<div class="ob-field"><label>Title / Role</label><input placeholder="Enter title or role"></div>
-<div class="ob-field"><label>Organization / Company</label><input placeholder="Enter organization or company"></div></div>
+<div class="ob-grid"><div class="ob-field"><label>Full Name</label><input value="John Doe"/></div>
+<div class="ob-field"><label>Email</label><input readonly="" value="john.doe@yopmail.com"/></div>
+<div class="ob-field"><label>Phone</label><input placeholder="(213) 555-0000"/></div>
+<div class="ob-field"><label>Title / Role</label><input placeholder="Enter title or role"/></div>
+<div class="ob-field"><label>Organization / Company</label><input placeholder="Enter organization or company"/></div></div>
 <div class="ob-actions"><button class="ob-btn primary" onclick="openBasicDashboardFirstTime()">Continue</button></div>
 </div></section>
 <section class="obpage" id="t1profile" style="display:none"><div class="ob-card"><span class="rolebadge">TIER 1 · PRIMARY USER</span><h1 style="margin-top:12px">Complete Your Basic Profile</h1><p>Your Angeleno account matches a primary/notice contact in LAHD records.</p><div class="ob-grid"><div class="ob-field"><label>Full Name</label><input value="Maria Hernandez"/></div><div class="ob-field"><label>Email</label><input readonly="" value="maria@riverviewhousing.com"/></div><div class="ob-field"><label>Phone</label><input placeholder="(213) 555-0000"/></div><div class="ob-field"><label>Title / Role</label><input value="Executive Director"/></div><div class="ob-field"><label>Organization / Company</label><input value="Riverview Housing LLC"/></div></div><div class="ob-actions"><button class="ob-btn primary" onclick="showOb('t1verify')">Continue</button></div></div></section>
@@ -2113,7 +2136,7 @@ document.querySelectorAll('.req-link').forEach(function(btn){
 </div>
 </div>
 <div class="transaction-only" id="transactionSections">
-<div class="section" id="lenderWorksheet">
+<div class="section" id="v107ChangeBorrower"><div class="section-head" onclick="toggleSection('v107ChangeBorrower')"><span>3. Borrower / Ownership Change</span><span>⌃</span></div><div class="section-body"><div class="v107-info">Illustrative current borrower values are sample data. In production, prepopulate from the selected LAHD loan and verify against the record.</div><div class="section-kicker">Provide information about the existing seller and proposed buyer for Change of Ownership (Sale).</div><div class="compare"><div><h3>Current Borrower / Seller</h3><label>Legal Entity Name<input data-v107-example="true" readonly="" value="Riverview Housing LLC"/></label><label>Entity Type<input data-v107-example="true" readonly="" value="LLC"/></label><label>FEIN<input data-v107-example="true" readonly="" value="••-•••4821"/></label><label>Authorized Representative<input data-v107-example="true" readonly="" value="Maria Hernandez"/></label><label>Contact Email<input data-v107-example="true" readonly="" value="maria@example.org"/></label></div><div><h3 id="proposedTitle">Proposed Borrower / Buyer</h3><label>Legal Entity Name<input class="entry" placeholder="Enter legal entity name"/></label><label>Entity Type<select class="entry"><option value="">Select</option><option>LLC</option><option>LP</option><option>Corporation</option><option>Other</option></select></label><label>FEIN<input class="entry" placeholder="Enter securely"/></label><label>Authorized Representative<input class="entry" placeholder="Name"/></label><label>Contact Email<input class="entry" placeholder="Email" type="email"/></label></div></div><label>Describe the proposed change<textarea class="entry" placeholder="Transaction purpose and effect on LAHD obligations" rows="3"></textarea></label></div></div><div class="section" id="lenderWorksheet">
 <div class="section-head" onclick="toggleSection('lenderWorksheet')"><span>3. Borrower - Lender Worksheet</span><span>⌃</span></div>
 <div class="section-body">
 <div class="subsection-title">Loan Calculation</div>
@@ -2169,7 +2192,7 @@ document.querySelectorAll('.req-link').forEach(function(btn){
 </div>
 <div class="disclaimer"><strong>Disclaimer</strong><p>I, THE UNDERSIGNED, CERTIFY THAT THE INFORMATION PROVIDED IN THIS APPLICATION IS TRUE AND CORRECT AS OF THE DATE SET FORTH OPPOSITE MY SIGNATURE ON THIS APPLICATION. I ACKNOWLEDGE THAT ANY MISREPRESENTATION(S) OF THE INFORMATION CONTAINED HEREIN WHICH RESULTS IN CIVIL LIABILITY AND/OR A LOSS TO THE CITY OF LOS ANGELES HOUSING AND COMMUNITY INVESTMENT DEPARTMENT (HCIDLA), ITS AGENTS, SUCCESSORS, ASSIGNS, INSURERS AND ANY OTHER PARTY WHO MAY SUFFER A LOSS DUE TO RELIANCE UPON ANY INFORMATION CONTAINED HEREIN MAY RESULT IN CIVIL RECOURSE AGAINST THE UNDERSIGNED. I FURTHER ACKNOWLEDGE THAT HCIDLA AT ITS SOLE DISCRETION SHALL HAVE THE RIGHT TO USE THE INFORMATION CONTAINED HEREIN TO REFER THE APPLICANT TO AN ALTERNATE LENDER FOR ANALYSIS AND POTENTIAL OFFERS OF COMPETITIVE FINANCING IN ORDER FOR HCIDLA TO PROTECT ITS SECURITY INTEREST AS A SUBORDINATED LENDER.</p><label class="ack"><input type="checkbox"/> <span>I acknowledge and agree to the terms stated in the disclaimer above</span></label></div>
 <div class="transaction-footer" id="transactionFooter"><button class="btn btn-light" type="button">Cancel</button><button class="btn btn-primary" type="button">Submit Form</button></div>
-</div>
+<div class="section" id="v107ChangeDocs"><div class="section-head" onclick="toggleSection('v107ChangeDocs')"><span>5. Document Upload</span><span>⌃</span></div><div class="section-body"><p class="helper">Upload required applicant documents before submitting. Buyer documents can be provided now or later by an invited contributor; missing buyer documents will not block submission. LAHD may request additional items during review.</p><div class="v108-summary" id="v108Summary">Required for submission: 0 of 10 received · Buyer documents: 0 of 12 received</div><h3>General Transaction Documents</h3><div class="docline" data-doc-number="1" data-requirement="required"><span>1. Signed statement on official letterhead stating why the City should consider the request; include Project/Loan number(s), circumstances, requested changes to existing loan terms, and signature.<span class="v108-requirement required">Required</span></span><input aria-label="Signed statement on official letterhead stating why the City should consider the request; include Project/Loan number(s), circumstances, requested changes to existing loan terms, and signature." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="2" data-requirement="required"><span>2. Resolution Authority &amp; Authorized Signatory(s).<span class="v108-requirement required">Required</span></span><input aria-label="Resolution Authority &amp; Authorized Signatory(s)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="3" data-requirement="required"><span>3. Organization Formation Documents and all Amendments (including organizational chart).<span class="v108-requirement required">Required</span></span><input aria-label="Organization Formation Documents and all Amendments (including organizational chart)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="4" data-requirement="required"><span>4. Certificate of Good Standing issued by the State of California (current within 6 months of application date).<span class="v108-requirement required">Required</span></span><input aria-label="Certificate of Good Standing issued by the State of California (current within 6 months of application date)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="5" data-requirement="required"><span>5. Estimated Closing Statement.<span class="v108-requirement required">Required</span></span><input aria-label="Estimated Closing Statement." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="6" data-requirement="conditional"><span>6. Purchase and Sale Agreement (for purchases only).<span class="v108-requirement conditional">If Applicable</span></span><input aria-label="Purchase and Sale Agreement (for purchases only)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="7" data-requirement="required"><span>7. Asset Management Questionnaire.<span class="v108-requirement required">Required</span></span><input aria-label="Asset Management Questionnaire." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="8" data-requirement="optional"><span>8. Other items as needed.<span class="v108-requirement optional">Optional</span></span><input aria-label="Other items as needed." data-v107-doc="true" type="file"/><small>Pending</small></div><h3>Seller / Current Borrower Documents</h3><p class="v108-note">Seller documents are required for initial submission in this demonstration.</p><div class="docline" data-doc-number="9" data-requirement="required"><span>9. Signed Certification and Authorization to Release Information (attached form).<span class="v108-requirement required">Required</span></span><input aria-label="Signed Certification and Authorization to Release Information (attached form)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="10" data-requirement="required"><span>10. Waiver of Notice to Inspect Form (attached form).<span class="v108-requirement required">Required</span></span><input aria-label="Waiver of Notice to Inspect Form (attached form)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="11" data-requirement="required"><span>11. Two months of current Mortgage Statements.<span class="v108-requirement required">Required</span></span><input aria-label="Two months of current Mortgage Statements." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="12" data-requirement="required"><span>12. Two months of current Reserve Account Statements.<span class="v108-requirement required">Required</span></span><input aria-label="Two months of current Reserve Account Statements." data-v107-doc="true" type="file"/><small>Pending</small></div><h3>Buyer / Proposed Borrower Documents</h3><p class="v108-note">Buyer documents are optional at initial submission, but may be required before LAHD completes its review. The seller can upload available files or invite the buyer to contribute.</p><div class="docline" data-doc-number="13" data-requirement="buyer"><span>13. Sponsor / Owner / Borrower signature blocks for proposed new Borrower (MS Word format).<span class="v108-requirement buyer">Buyer to Provide</span></span><input accept=".doc,.docx" aria-label="Sponsor / Owner / Borrower signature blocks for proposed new Borrower (MS Word format)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="14" data-requirement="buyer"><span>14. Property Title Report (with hyperlinks to recorded documents).<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Property Title Report (with hyperlinks to recorded documents)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="15" data-requirement="buyer"><span>15. Broker / Lender Worksheet.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Broker / Lender Worksheet." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-condition="true" data-doc-number="16" data-requirement="buyer"><span>16. IRS Form W-9 — only for new General Partner or Managing General Partner.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="IRS Form W-9 — only for new General Partner or Managing General Partner." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-condition="true" data-doc-number="17" data-requirement="buyer"><span>17. Business Tax Certificate — new Borrower only.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Business Tax Certificate — new Borrower only." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="18" data-requirement="buyer"><span>18. Project Proforma, including before- and after-term-change 15-year cash flow projections.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Project Proforma, including before- and after-term-change 15-year cash flow projections." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="19" data-requirement="buyer"><span>19. Appraisal (current within 6 months of application date).<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Appraisal (current within 6 months of application date)." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="20" data-requirement="buyer"><span>20. Commitment Letter.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Commitment Letter." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-condition="true" data-doc-number="21" data-requirement="buyer"><span>21. List of Properties in LAHD Multifamily Loan Portfolio Form — new General Partner(s) only.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="List of Properties in LAHD Multifamily Loan Portfolio Form — new General Partner(s) only." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="22" data-requirement="buyer"><span>22. Resume of Multifamily Affordable Housing Experience — buyer only.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Resume of Multifamily Affordable Housing Experience — buyer only." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-condition="true" data-doc-number="23" data-requirement="buyer"><span>23. List of managed properties in LAHD portfolio — new property manager only.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="List of managed properties in LAHD portfolio — new property manager only." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="docline" data-doc-number="24" data-requirement="buyer"><span>24. Buyer's Self-Certification of Financial Capacity — existing and/or new Borrower.<span class="v108-requirement buyer">Buyer to Provide</span></span><input aria-label="Buyer's Self-Certification of Financial Capacity — existing and/or new Borrower." data-v107-doc="true" type="file"/><small>Pending</small></div><div class="invitebar"><div><strong>Additional Document Contributor</strong><p id="v107InviteStatus">No invitation prepared.</p></div><button class="btn btn-primary" id="v107Invite" type="button">+ Invite Buyer / Contributor</button></div></div></div><div hidden="" id="v107StatusBar"><div><strong id="v107StatusLabel">Submitted request</strong><div style="font-size:12px;color:#526b80;margin-top:4px">Original form is read-only. Authorized supplemental documents and contributor invitations remain available.</div></div><button class="btn btn-light btn-small" id="v107ReturnEdit" type="button">Return to New Request</button></div></div>
 <div class="footer" id="reserveFooter">
 <button class="btn btn-light" type="button">Save Draft</button>
 <button class="btn btn-primary" type="button">Continue</button>
@@ -3897,7 +3920,6 @@ function openBasicDashboardFirstTime(){
   },0);
 }
 </script>
-
 <script id="v93-returning-user-script">
 function returningUserLogin(){
   const onboarding=document.getElementById('onboarding');
@@ -3930,4 +3952,89 @@ if(route==='staff'){
  if(input){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}));}
 }
 })();
-</script></body></html>
+</script><script id="v107-integration-script">
+(function(){
+'use strict';
+const own=document.getElementById('v107ChangeBorrower'),docs=document.getElementById('v107ChangeDocs');
+const lender=document.getElementById('lenderWorksheet'),standard=document.getElementById('transactionDocs');
+const checks=[...document.querySelectorAll('#multiMenu input[type="checkbox"]')];
+const sale=checks.find(x=>x.value==='Change of Ownership (Sale)');
+let submitted=false;
+function selection(){
+ const active=!!sale?.checked;
+ const selected=checks.filter(x=>x.checked);
+ const other=selected.some(x=>x!==sale);
+ own.hidden=!active;docs.hidden=!active;
+ // Preserve existing worksheet and checklist for other selected transaction types.
+ lender.hidden=active&&!other;
+ standard.hidden=active&&!other;
+ document.querySelectorAll('#v107ChangeBorrower .entry').forEach(x=>x.disabled=submitted);
+ document.querySelectorAll('#requestDetails input,#requestDetails textarea').forEach(x=>x.disabled=submitted);
+ document.querySelectorAll('#requestor input,#requestor select,#requestor textarea').forEach(x=>x.disabled=submitted);
+ document.getElementById('v107StatusBar').hidden=!submitted;
+ const submit=document.querySelector('#transactionFooter .btn-primary');
+ if(submit){submit.textContent=submitted?'Submitted — View Only':'Submit Form';submit.disabled=submitted;}
+}
+checks.forEach(x=>x.addEventListener('change',()=>setTimeout(selection,0)));
+document.querySelectorAll('input[name="requestCategory"]').forEach(x=>x.addEventListener('change',selection));
+selection();
+// Demo document selection statuses (not a backend upload).
+docs.querySelectorAll('.docline input[type="file"]').forEach(input=>input.addEventListener('change',()=>{
+ const st=input.parentElement.querySelector('small');if(st){st.textContent=input.files?.length?'Selected':'Pending';st.style.color=input.files?.length?'#167047':'#986619';}
+}));
+const overlay=document.getElementById('v107Overlay');
+document.getElementById('v107Invite').addEventListener('click',()=>overlay.classList.add('open'));
+document.getElementById('v107Cancel').addEventListener('click',()=>overlay.classList.remove('open'));
+overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open')});
+document.getElementById('v107Send').addEventListener('click',()=>{
+ const name=document.getElementById('v107Person').value.trim(),email=document.getElementById('v107Email').value.trim();
+ const n=overlay.querySelectorAll('.requested-doc:checked').length;
+ if(!name||!email.includes('@')||n===0){alert('Enter recipient name, valid email and select at least one document.');return;}
+ document.getElementById('v107InviteStatus').textContent='Demo invitation prepared for '+name+' ('+email+') · '+n+' documents requested. No email sent.';
+ overlay.classList.remove('open');
+});
+const submit=document.querySelector('#transactionFooter .btn-primary');
+if(submit)submit.addEventListener('click',e=>{
+ if(!sale?.checked||submitted)return;
+ // Preserve earlier validation handlers: this demo switches only after the association check.
+ const hasLoan=[...document.querySelectorAll('input[name="v82AssociatedLoan"]:checked')].length>0 ||
+  [...document.querySelectorAll('.v82-manual-row')].some(r=>r.querySelector('.v82-m-loan')?.value.trim()&&r.querySelector('.v82-m-project')?.value.trim()&&r.querySelector('.v82-m-address')?.value.trim());
+ if(!hasLoan)return;
+ e.preventDefault();submitted=true;
+ document.getElementById('v107StatusLabel').textContent='Submitted — Change of Ownership (Sale)';
+ selection();document.getElementById('v107StatusBar').scrollIntoView({behavior:'smooth',block:'start'});
+},false);
+document.getElementById('v107ReturnEdit').addEventListener('click',()=>{submitted=false;selection();});
+// Expose controlled demo open for future dashboard request-detail integration.
+window.v107OpenSubmittedOwnershipRequest=function(){
+ const category=document.querySelector('input[name="requestCategory"][value="transaction"]');
+ if(category){category.checked=true;category.dispatchEvent(new Event('change',{bubbles:true}));}
+ if(sale&&!sale.checked){sale.checked=true;sale.dispatchEvent(new Event('change',{bubbles:true}));}
+ const req=document.getElementById('integratedRequestView');
+ if(req){req.style.display='block';}
+ const shell=document.getElementById('portalShell');if(shell) shell.style.display='none';
+ submitted=true;selection();window.scrollTo(0,0);
+};
+})();
+</script><script>
+(function(){
+ const root=document.getElementById('v107ChangeDocs');if(!root)return;
+ const rows=[...root.querySelectorAll('.docline[data-doc-number]')];
+ const required=rows.filter(r=>r.dataset.requirement==='required'),buyers=rows.filter(r=>r.dataset.requirement==='buyer');
+ const hasFile=r=>!!r.querySelector('input[type=file]')?.files?.length;
+ function update(){
+  const nr=required.filter(hasFile).length,nb=buyers.filter(hasFile).length;
+  document.getElementById('v108Summary').textContent='Required for submission: '+nr+' of '+required.length+' received · Buyer documents: '+nb+' of '+buyers.length+' received (nonblocking)';
+  rows.forEach(r=>{const status=r.querySelector('small');if(!status)return;status.textContent=hasFile(r)?'Selected':r.dataset.requirement==='buyer'?'Awaiting Buyer':r.dataset.requirement==='required'?'Missing':'Pending';});
+ }
+ root.querySelectorAll('input[type=file]').forEach(i=>i.addEventListener('change',update));update();
+ // Validation for the ownership-specific demo; existing loan association validation remains unchanged.
+ const submit=document.querySelector('#transactionFooter .btn-primary');
+ if(submit)submit.addEventListener('click',e=>{
+  const sale=[...document.querySelectorAll('#multiMenu input[type=checkbox]')].find(x=>x.value==='Change of Ownership (Sale)');
+  if(!sale?.checked||submit.disabled)return;
+  const missing=required.filter(r=>!hasFile(r));
+  if(missing.length){e.preventDefault();e.stopImmediatePropagation();required.forEach(r=>r.classList.toggle('v108-missing',!hasFile(r)));alert('Please upload the '+missing.length+' required applicant/seller document(s) before submitting. Buyer documents may be provided later and do not block submission.');root.classList.remove('collapsed');root.scrollIntoView({behavior:'smooth',block:'start'});}
+ },true);
+})();
+</script><div class="overlay" id="v107Overlay"><div class="dialog"><h2>Invite Document Contributor</h2><p class="muted">Restricted access to selected document uploads only.</p><label>Contributor role<select><option>Proposed Buyer</option><option>Buyer Representative</option><option>Seller Representative</option></select></label><label>Recipient name<input id="v107Person" placeholder="Full name"/></label><label>Recipient email<input id="v107Email" placeholder="name@example.com" type="email"/></label><h3>Documents requested</h3><label><input checked="" class="requested-doc" type="checkbox"/> Sponsor / Owner / Borrower signature blocks for proposed new Borrower (MS Word format).</label><label><input checked="" class="requested-doc" type="checkbox"/> Property Title Report (with hyperlinks to recorded documents).</label><label><input checked="" class="requested-doc" type="checkbox"/> Broker / Lender Worksheet.</label><label><input checked="" class="requested-doc" type="checkbox"/> IRS Form W-9 — only for new General Partner or Managing General Partner.</label><label><input checked="" class="requested-doc" type="checkbox"/> Business Tax Certificate — new Borrower only.</label><label><input checked="" class="requested-doc" type="checkbox"/> Project Proforma, including before- and after-term-change 15-year cash flow projections.</label><label><input checked="" class="requested-doc" type="checkbox"/> Appraisal (current within 6 months of application date).</label><label><input checked="" class="requested-doc" type="checkbox"/> Commitment Letter.</label><label><input checked="" class="requested-doc" type="checkbox"/> List of Properties in LAHD Multifamily Loan Portfolio Form — new General Partner(s) only.</label><label><input checked="" class="requested-doc" type="checkbox"/> Resume of Multifamily Affordable Housing Experience — buyer only.</label><label><input checked="" class="requested-doc" type="checkbox"/> List of managed properties in LAHD portfolio — new property manager only.</label><label><input checked="" class="requested-doc" type="checkbox"/> Buyer's Self-Certification of Financial Capacity — existing and/or new Borrower.</label><button class="btn btn-light" id="v107Cancel">Cancel</button><button class="btn btn-primary" id="v107Send">Send Invitation (Demo)</button></div></div></body></html>
