@@ -1506,7 +1506,17 @@ html[data-v96-route="reserve"] .demoSwitch {display:none!important}
 #borrowerRequestViewModal dl{display:grid;grid-template-columns:150px 1fr;gap:12px;margin:18px 0}
 #borrowerRequestViewModal dt{color:#65798e}#borrowerRequestViewModal dd{margin:0;font-weight:600}
 </style>
-</head>
+<style id="v136-borrower-style">
+#v136Overlay[hidden]{display:none!important}#v136Overlay{position:fixed;inset:0;background:rgba(17,36,57,.65);z-index:999999;display:flex;justify-content:center;align-items:center;padding:22px}
+#v136Dialog{width:min(900px,96vw);max-height:92vh;overflow:auto;background:#fff;border-radius:10px;box-shadow:0 18px 55px #0004;font:13px Arial,sans-serif;color:#213b55}
+#v136Dialog .v136-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #dbe5ee}
+#v136Dialog h2{margin:0;font-size:20px}#v136Dialog h3{margin:22px 0 10px;font-size:16px}
+#v136Dialog .v136-body{padding:18px 24px 28px}#v136Dialog .v136-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;background:#f1f6fb;border-radius:7px}
+#v136Dialog .v136-meta span{display:block;color:#6b7d90;font-size:11px;margin-bottom:4px}
+#v136Dialog table{width:100%;border-collapse:collapse}#v136Dialog th,#v136Dialog td{padding:12px 10px;text-align:left;border-bottom:1px solid #e1e8f0;background:transparent}#v136Dialog th{background:#f4f7fa}
+#v136Dialog .v136-note{color:#64798d;font-size:12px;margin-top:10px}#v136Dialog .v136-close{cursor:pointer;border:1px solid #b6c8da;border-radius:5px;background:white;padding:7px 13px}
+@media(max-width:650px){#v136Dialog .v136-meta{grid-template-columns:1fr}#v136Dialog .v136-body{overflow:auto}}
+</style></head>
 <body><nav class="v96-nav"><a href="index.html">Sign In</a><a href="borrower-portal.html">Borrower Dashboard</a><a href="staff-dashboard.html">Staff Dashboard</a><a href="loan-portfolio-transactions.html">Transactions</a><a href="reserve-withdrawal.html">Reserve Withdrawal</a></nav>
 <div class="onboard-shell active" id="onboarding">
 <header class="top"><div class="brand"><div class="logo"></div><div><h1>Borrower Portal</h1><p>Los Angeles Housing Department</p></div></div><div class="profile"><div><b>Riverview Housing LLC</b><span id="profileRole">Maria Hernandez · Primary User</span></div><div class="avatar" id="avatar">MH</div></div></header>
@@ -4031,4 +4041,32 @@ if(route==='staff'){
   else applyRole();
 })();
 </script>
-</body></html>
+<div id="v136Overlay" hidden role="dialog" aria-modal="true" aria-label="Reserve Withdrawal Request Details">
+ <div id="v136Dialog"><div class="v136-head"><h2>Reserve Withdrawal — View Request</h2><button class="v136-close" id="v136Close" type="button">Close</button></div>
+ <div class="v136-body"><div class="v136-meta"><div><span>Original Request #</span><strong>REQ-17784556</strong></div><div><span>Request Type</span><strong>Reserve Withdrawal</strong></div><div><span>Current Status</span><strong>Open</strong></div></div>
+ <h3>Related Reserve Fund Allocations</h3><p>Allocations associated with the original request are shown below. Related requests do not appear as separate dashboard entries.</p>
+ <table><thead><tr><th>Request #</th><th>Reserve Fund</th><th>Allocation</th><th>Status</th><th>Determination Letter</th></tr></thead>
+ <tbody><tr><td><strong>REQ-17784556</strong> (Original)</td><td>Operating Reserve</td><td>$12,750</td><td>In Review</td><td>Not yet issued</td></tr>
+ <tr><td>REQ-17784556-01</td><td>Replacement Reserve</td><td>$6,500</td><td>Awaiting Approval</td><td>Not yet issued</td></tr></tbody></table>
+ <p class="v136-note">Illustrative allocation amounts and statuses. When determination letters are issued, links for both requests will be available here.</p></div></div></div>
+<script id="v136-borrower-details">
+(function(){
+ const overlay=document.getElementById('v136Overlay');
+ const close=()=>{overlay.hidden=true;};
+ document.getElementById('v136Close').addEventListener('click',close);
+ overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)close();});
+ document.addEventListener('click',function(e){
+  const row=e.target.closest('#dashboard tr');if(!row)return;
+  const cells=row.querySelectorAll('td');if(cells.length<2||!/^Reserve Withdrawal$/i.test(cells[1].textContent.trim()))return;
+  if(e.target.closest('button.dots')||e.target.closest('td:first-child')){
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();overlay.hidden=false;
+  }
+ },true);
+ // The original is the sole actionable listing; related rows are never added.
+ document.querySelectorAll('#dashboard .request-table tbody tr').forEach(row=>{
+  const id=row.cells[0]?.textContent.trim()||'';
+  if(/^REQ-\d+-\d{2}$/.test(id))row.remove();
+ });
+})();
+</script></body></html>
